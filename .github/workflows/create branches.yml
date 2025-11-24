@@ -101,12 +101,9 @@ jobs:
           echo "old_auth_img=$OLD_AUTH_IMG" >> $GITHUB_OUTPUT
           echo "new_auth_img=$NEW_AUTH_IMG" >> $GITHUB_OUTPUT
 
-      - name: Commit and push changes
-        run: |          
           BRANCH_NAME="${{ inputs.branch_name }}"
-          
           # Check if there are any changes
-          if git diff; then
+          if git diff --quiet; then
             echo "⚠️  No changes detected"
             exit 0
           fi
@@ -121,3 +118,4 @@ jobs:
           git push origin "$BRANCH_NAME"
           
           echo "✅ Successfully committed and pushed docker image update to $BRANCH_NAME"
+      
