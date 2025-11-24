@@ -112,7 +112,10 @@ jobs:
           # Replace old auth image in the file using Python for reliable string replacement
           python3 << EOF
           import re
-          
+          import os
+          print("Files in current directory:")
+          print(os.listdir())
+
           file_path = "$tests_acceptance_amazon_FILE_PATH"
           old_auth_img = "$OLD_AUTH_IMG"
           new_auth_img = "$NEW_AUTH_IMG"
