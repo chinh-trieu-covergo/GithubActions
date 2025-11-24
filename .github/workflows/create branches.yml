@@ -91,7 +91,9 @@ jobs:
       - name: Replace image in docker
         id: replace
         run: |
-          
+          if git show-ref --verify --quiet refs/heads/${{ inputs.branch_name }}; then
+            echo "⚠️  Branch '${{ inputs.branch_name }}' already exists locally, checking it out"           
+          fi
           git checkout "${{ inputs.branch_name }}"
           Tests_Acceptance_Amazon_FILE_PATH="docker-compose-tests-acceptance-amazon.yml"
           OLD_AUTH_IMG="image: ghcr.io/covergo/auth:master"
