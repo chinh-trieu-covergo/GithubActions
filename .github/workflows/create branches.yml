@@ -78,6 +78,4 @@ jobs:
           echo "Checking out branch '${{ inputs.branch_name }}'"
           git checkout "${{ inputs.branch_name }}"
           echo "Checking out branch '${{ inputs.branch_name }}'"
-          if  ${{ matrix.repository }} == "ChinhTrieu-CoverGo/RequestManager"; then
-            echo "Updating docker image for request manager"            
-          fi
+          
