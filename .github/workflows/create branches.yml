@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: ${{ matrix.repository }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.SECRET }}
           fetch-depth: 1
 
       - name: Create and push branch in ${{ matrix.repository }}
