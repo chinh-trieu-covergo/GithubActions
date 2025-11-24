@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: ${{ matrix.repository }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
           fetch-depth: 1
 
       - name: Create and push branch in ${{ matrix.repository }}
@@ -37,17 +37,39 @@ jobs:
           git config user.email "infrastructure@covergo.com"
           
           # Get the default branch (main or master)
-          DEFAULT_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
+          # Try to get the default branch from remote HEAD
+          DEFAULT_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo "")
+          
+          # If that fails, try common branch names
+          if [ -z "$DEFAULT_BRANCH" ]; then
+            if git show-ref --verify --quiet refs/remotes/origin/main; then
+              DEFAULT_BRANCH="main"
+            elif git show-ref --verify --quiet refs/remotes/origin/master; then
+              DEFAULT_BRANCH="master"
+            else
+              echo "❌ Error: Could not determine default branch for ${{ matrix.repository }}"
+              exit 1
+            fi
+          fi
+          
+          echo "Using default branch: $DEFAULT_BRANCH"
           
           # Checkout the default branch
           git checkout $DEFAULT_BRANCH
           git pull origin $DEFAULT_BRANCH
           
-          # Create new branch
-          git checkout -b ${{ inputs.branch_name }}
+          # Check if branch already exists
+          if git show-ref --verify --quiet refs/heads/${{ inputs.branch_name }}; then
+            echo "⚠️  Branch '${{ inputs.branch_name }}' already exists locally, checking it out"
+            git checkout ${{ inputs.branch_name }}
+            git pull origin ${{ inputs.branch_name }} || true
+          else
+            # Create new branch
+            git checkout -b ${{ inputs.branch_name }}
+          fi
           
           # Push the new branch
           git push -u origin ${{ inputs.branch_name }}
           
-          echo "✅ Successfully created branch '${{ inputs.branch_name }}' in ${{ matrix.repository }}"
+          echo "✅ Successfully created/updated branch '${{ inputs.branch_name }}' in ${{ matrix.repository }}"
 
