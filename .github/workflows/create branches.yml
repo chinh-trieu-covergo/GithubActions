@@ -116,12 +116,13 @@ jobs:
           print("Files in current directory:")
           print(os.listdir())
 
-          file_path = "$tests_acceptance_amazon_FILE_PATH"
-          old_auth_img = "$OLD_AUTH_IMG"
-          new_auth_img = "$NEW_AUTH_IMG"
-          print("File path: $file_path")
-          print("Old auth image: $old_auth_img")
-          print("New auth image: $new_auth_img")
+          import os
+          file_path = os.environ.get("Tests_Acceptance_Amazon_FILE_PATH")
+          old_auth_img = os.environ.get("OLD_AUTH_IMG")
+          new_auth_img = os.environ.get("NEW_AUTH_IMG")
+          print("File path:", file_path)
+          print("Old auth image:", old_auth_img)
+          print("New auth image:", new_auth_img)
 
           
           with open(file_path, 'r') as f:
