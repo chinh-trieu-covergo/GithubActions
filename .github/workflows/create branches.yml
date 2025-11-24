@@ -91,55 +91,12 @@ jobs:
         id: replace
         run: |
           Tests_Acceptance_Amazon_FILE_PATH="docker-compose-tests-acceptance-amazon.yml"
-
           OLD_AUTH_IMG="image: ghcr.io/covergo/auth:master"
           NEW_AUTH_IMG="image: ghcr.io/covergo/auth:${{ inputs.branch_name }}"
 
-          echo "Files in current directory:"
-          ls -1
+          # Use sed to replace the old auth image with the new one in the docker-compose file
+          sed -i "s|$OLD_AUTH_IMG|$NEW_AUTH_IMG|g" "$Tests_Acceptance_Amazon_FILE_PATH"
 
-          
-          # Check if the old auth image exists in the file
-          if ! grep -q "$OLD_AUTH_IMG" "$Tests_Acceptance_Amazon_FILE_PATH"; then
-            echo "❌ Error: Could not find old auth image in $Tests_Acceptance_Amazon_FILE_PATH"
-            echo "Expected: $OLD_AUTH_IMG"
-            exit 1
-          fi          
-          
-          echo "Current auth image: $OLD_AUTH_IMG"
-          echo "New auth image: $NEW_AUTH_IMG"
-          
-          # Replace old auth image in the file using Python for reliable string replacement
-          python3 << EOF
-          import re
-          import os
-          print("Files in current directory:")
-          print(os.listdir())
-
-          import os
-         
-          print("File path:", ${{Tests_Acceptance_Amazon_FILE_PATH}})
-          print("Old auth image:", ${{OLD_AUTH_IMG}})
-          print("New auth image:", ${{NEW_AUTH_IMG}})
-
-          
-          with open(file_path, 'r') as f:
-              content = f.read()
-          
-          # Replace old auth image          
-          new_content = content.replace(old_auth_img, new_auth_img)
-          
-          with open(file_path, 'w') as f:
-              f.write(new_content)
-          EOF
-          
-          # Verify the change
-          UPDATED_AUTH_IMG=$(grep "$NEW_AUTH_IMG" "$Tests_Acceptance_Amazon_FILE_PATH")
-          if [ "$UPDATED_AUTH_IMG" != "$NEW_AUTH_IMG" ]; then
-            echo "❌ Error: Auth image update failed. Expected $NEW_AUTH_IMG, got $UPDATED_AUTH_IMG"
-            exit 1
-          fi
-          
           echo "✅ Successfully updated auth image from $OLD_AUTH_IMG to $NEW_AUTH_IMG"
           echo "old_auth_img=$OLD_AUTH_IMG" >> $GITHUB_OUTPUT
           echo "new_auth_img=$NEW_AUTH_IMG" >> $GITHUB_OUTPUT
