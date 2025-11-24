@@ -71,6 +71,7 @@ jobs:
           git push -u origin ${{ inputs.branch_name }}
           
           echo "✅ Successfully created/updated branch '${{ inputs.branch_name }}' in ${{ matrix.repository }}"
+          git branch -a
   update-docker-image-request-manager:
     needs: create-branch
     runs-on: ubuntu-latest
