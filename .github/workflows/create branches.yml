@@ -75,7 +75,7 @@ jobs:
       - name: Update docker image for ${{ matrix.repository }}
         run: |         
           if [ "${{ matrix.repository }}" == "ChinhTrieu-CoverGo/RequestManager" ]; then
-            git checkout -b ${{ inputs.branch_name }}
+            git checkout ${{ inputs.branch_name }}
             Tests_Acceptance_Amazon_FILE_PATH="docker-compose-tests-acceptance-amazon.yml"
             OLD_AUTH_IMG="image: ghcr.io/covergo/auth:master"
             NEW_AUTH_IMG="image: ghcr.io/covergo/auth:${{ inputs.branch_name }}"
