@@ -72,6 +72,7 @@ jobs:
           
           echo "✅ Successfully created/updated branch '${{ inputs.branch_name }}' in ${{ matrix.repository }}"
   update-docker-image-request-manager:
+    needs: create-branch
     runs-on: ubuntu-latest
     permissions:
       contents: write
