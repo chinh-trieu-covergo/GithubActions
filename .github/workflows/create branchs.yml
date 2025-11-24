@@ -1,0 +1,52 @@
+name: Create Branch in Multiple Repositories
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch_name:
+        description: 'Branch name to create'
+        required: true
+        type: string
+
+jobs:
+  create-branch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        repository:
+          - ChinhTrieu-CoverGo/GithubActions
+          - ChinhTrieu-CoverGo/RequestManager
+          # Add more repositories here as needed
+          # - CoverGo/Repository3
+          # - CoverGo/Repository4
+          # ... up to 100 repositories
+    steps:
+      - name: Checkout ${{ matrix.repository }}
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ matrix.repository }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+
+      - name: Create and push branch in ${{ matrix.repository }}
+        run: |
+          git config user.name "coverbot"
+          git config user.email "infrastructure@covergo.com"
+          
+          # Get the default branch (main or master)
+          DEFAULT_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
+          
+          # Checkout the default branch
+          git checkout $DEFAULT_BRANCH
+          git pull origin $DEFAULT_BRANCH
+          
+          # Create new branch
+          git checkout -b ${{ inputs.branch_name }}
+          
+          # Push the new branch
+          git push -u origin ${{ inputs.branch_name }}
+          
+          echo "✅ Successfully created branch '${{ inputs.branch_name }}' in ${{ matrix.repository }}"
+
