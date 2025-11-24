@@ -85,12 +85,14 @@ jobs:
           fetch-depth: 1
       - name: Configure Git
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "coverbot"
+          git config user.email "infrastructure@covergo.com"
   
       - name: Replace image in docker
         id: replace
         run: |
+          
+          git checkout "${{ inputs.branch_name }}"
           Tests_Acceptance_Amazon_FILE_PATH="docker-compose-tests-acceptance-amazon.yml"
           OLD_AUTH_IMG="image: ghcr.io/covergo/auth:master"
           NEW_AUTH_IMG="image: ghcr.io/covergo/auth:${{ inputs.branch_name }}"
