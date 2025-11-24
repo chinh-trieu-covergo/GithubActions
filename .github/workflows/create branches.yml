@@ -117,12 +117,10 @@ jobs:
           print(os.listdir())
 
           import os
-          file_path = os.environ.get("Tests_Acceptance_Amazon_FILE_PATH")
-          old_auth_img = os.environ.get("OLD_AUTH_IMG")
-          new_auth_img = os.environ.get("NEW_AUTH_IMG")
-          print("File path:", file_path)
-          print("Old auth image:", old_auth_img)
-          print("New auth image:", new_auth_img)
+         
+          print("File path:", ${{Tests_Acceptance_Amazon_FILE_PATH}})
+          print("Old auth image:", ${{OLD_AUTH_IMG}})
+          print("New auth image:", ${{NEW_AUTH_IMG}})
 
           
           with open(file_path, 'r') as f:
