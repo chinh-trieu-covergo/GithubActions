@@ -72,55 +72,12 @@ jobs:
           
           echo "✅ Successfully created/updated branch '${{ inputs.branch_name }}' in ${{ matrix.repository }}"
           git branch -a
-  update-docker-image-request-manager:
-    needs: create-branch
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout RequestManager repository
-        uses: actions/checkout@v4
-        with:
-          repository: ChinhTrieu-CoverGo/RequestManager
-          token: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
-          fetch-depth: 1
-      - name: Configure Git
-        run: |
-          git config user.name "coverbot"
-          git config user.email "infrastructure@covergo.com"
-  
-      - name: Replace image in docker
-        id: replace
-        run: |
+      - name: Update docker image for request manager
+        run:
           git branch -a
           echo "Checking out branch '${{ inputs.branch_name }}'"
           git checkout "${{ inputs.branch_name }}"
-          Tests_Acceptance_Amazon_FILE_PATH="docker-compose-tests-acceptance-amazon.yml"
-          OLD_AUTH_IMG="image: ghcr.io/covergo/auth:master"
-          NEW_AUTH_IMG="image: ghcr.io/covergo/auth:${{ inputs.branch_name }}"
-
-          # Use sed to replace the old auth image with the new one in the docker-compose file
-          sed -i "s|$OLD_AUTH_IMG|$NEW_AUTH_IMG|g" "$Tests_Acceptance_Amazon_FILE_PATH"
-
-          echo "✅ Successfully updated auth image from $OLD_AUTH_IMG to $NEW_AUTH_IMG"
-          echo "old_auth_img=$OLD_AUTH_IMG" >> $GITHUB_OUTPUT
-          echo "new_auth_img=$NEW_AUTH_IMG" >> $GITHUB_OUTPUT
-
-          BRANCH_NAME="${{ inputs.branch_name }}"
-          # Check if there are any changes
-          if git diff --quiet; then
-            echo "⚠️  No changes detected"
-            exit 0
+          echo "Checking out branch '${{ inputs.branch_name }}'"
+          if  ${{ matrix.repository }} == "ChinhTrieu-CoverGo/RequestManager"; then
+            echo "Updating docker image for request manager"            
           fi
-          
-          # Stage the file
-          git add .
-          
-          # Commit the changes
-          git commit -m "chore: update docker image for ${{ inputs.branch_name }}"
-          
-          # Push to the branch
-          git push origin "${{ inputs.branch_name }}"
-          
-          echo "✅ Successfully committed and pushed docker image update to ${{ inputs.branch_name }}"
-      
