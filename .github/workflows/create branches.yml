@@ -1,4 +1,4 @@
-name: Create Branch in Multiple Repositories
+name: Create gamma branch in multiple CoverGo repositories
 
 on:
   workflow_dispatch:
@@ -12,13 +12,12 @@ jobs:
   create-branch:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write
       contents: write
     strategy:
       matrix:
         repository:
-          - ChinhTrieu-CoverGo/RequestManager
-          - ChinhTrieu-CoverGo/Reference
+          - CoverGo/Reference
+          - CoverGo/RequestManager
           # Add more repositories here as needed
           # - CoverGo/Repository3
           # - CoverGo/Repository4
@@ -72,4 +71,90 @@ jobs:
           git push -u origin ${{ inputs.branch_name }}
           
           echo "✅ Successfully created/updated branch '${{ inputs.branch_name }}' in ${{ matrix.repository }}"
+  update-docker-image-request-manager:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout RequestManager repository
+        uses: actions/checkout@v4
+        with:
+          repository: CoverGo/RequestManager
+          token: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+  
+      - name: Replace image in docker
+        id: replace
+        run: |
+          Tests_Acceptance_Amazon_FILE_PATH="docker-compose-tests-acceptance-amazon.yml"
 
+          OLD_AUTH_IMG="image: ghcr.io/covergo/auth:master"
+          NEW_AUTH_IMG="image: ghcr.io/covergo/auth:${{ inputs.branch_name }}"
+
+          echo "Files in current directory:"
+          ls -1
+
+          
+          # Check if the old auth image exists in the file
+          if ! grep -q "$OLD_AUTH_IMG" "$tests_acceptance_amazon_FILE_PATH"; then
+            echo "❌ Error: Could not find old auth image in $tests_acceptance_amazon_FILE_PATH"
+            echo "Expected: $OLD_AUTH_IMG"
+            exit 1
+          fi          
+          
+          echo "Current auth image: $OLD_AUTH_IMG"
+          echo "New auth image: $NEW_AUTH_IMG"
+          
+          # Replace old auth image in the file using Python for reliable string replacement
+          python3 << EOF
+          import re
+          
+          file_path = "$tests_acceptance_amazon_FILE_PATH"
+          old_auth_img = "$OLD_AUTH_IMG"
+          new_auth_img = "$NEW_AUTH_IMG"
+          
+          with open(file_path, 'r') as f:
+              content = f.read()
+          
+          # Replace old auth image          
+          new_content = content.replace(old_auth_img, new_auth_img)
+          
+          with open(file_path, 'w') as f:
+              f.write(new_content)
+          EOF
+          
+          # Verify the change
+          UPDATED_AUTH_IMG=$(grep "$NEW_AUTH_IMG" "$tests_acceptance_amazon_FILE_PATH")
+          if [ "$UPDATED_AUTH_IMG" != "$NEW_AUTH_IMG" ]; then
+            echo "❌ Error: Auth image update failed. Expected $NEW_AUTH_IMG, got $UPDATED_AUTH_IMG"
+            exit 1
+          fi
+          
+          echo "✅ Successfully updated auth image from $OLD_AUTH_IMG to $NEW_AUTH_IMG"
+          echo "old_auth_img=$OLD_AUTH_IMG" >> $GITHUB_OUTPUT
+          echo "new_auth_img=$NEW_AUTH_IMG" >> $GITHUB_OUTPUT
+
+      - name: Commit and push changes
+        run: |          
+          BRANCH_NAME="${{ inputs.branch_name }}"
+          
+          # Check if there are any changes
+          if git diff; then
+            echo "⚠️  No changes detected"
+            exit 0
+          fi
+          
+          # Stage the file
+          git add .
+          
+          # Commit the changes
+          git commit -m "chore: update docker image for $BRANCH_NAME"
+          
+          # Push to the branch
+          git push origin "$BRANCH_NAME"
+          
+          echo "✅ Successfully committed and pushed docker image update to $BRANCH_NAME"
