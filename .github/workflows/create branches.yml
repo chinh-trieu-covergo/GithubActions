@@ -100,8 +100,8 @@ jobs:
 
           
           # Check if the old auth image exists in the file
-          if ! grep -q "$OLD_AUTH_IMG" "$tests_acceptance_amazon_FILE_PATH"; then
-            echo "❌ Error: Could not find old auth image in $tests_acceptance_amazon_FILE_PATH"
+          if ! grep -q "$OLD_AUTH_IMG" "$Tests_Acceptance_Amazon_FILE_PATH"; then
+            echo "❌ Error: Could not find old auth image in $Tests_Acceptance_Amazon_FILE_PATH"
             echo "Expected: $OLD_AUTH_IMG"
             exit 1
           fi          
@@ -128,7 +128,7 @@ jobs:
           EOF
           
           # Verify the change
-          UPDATED_AUTH_IMG=$(grep "$NEW_AUTH_IMG" "$tests_acceptance_amazon_FILE_PATH")
+          UPDATED_AUTH_IMG=$(grep "$NEW_AUTH_IMG" "$Tests_Acceptance_Amazon_FILE_PATH")
           if [ "$UPDATED_AUTH_IMG" != "$NEW_AUTH_IMG" ]; then
             echo "❌ Error: Auth image update failed. Expected $NEW_AUTH_IMG, got $UPDATED_AUTH_IMG"
             exit 1
