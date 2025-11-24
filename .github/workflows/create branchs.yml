@@ -16,8 +16,8 @@ jobs:
     strategy:
       matrix:
         repository:
-          - ChinhTrieu-CoverGo/GithubActions
-          - ChinhTrieu-CoverGo/RequestManager
+          - https://github.com/ChinhTrieu-CoverGo/RequestManager.git
+          - https://github.com/ChinhTrieu-CoverGo/Reference.git
           # Add more repositories here as needed
           # - CoverGo/Repository3
           # - CoverGo/Repository4
