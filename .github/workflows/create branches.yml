@@ -73,12 +73,12 @@ jobs:
           echo "✅ Successfully created/updated branch '${{ inputs.branch_name }}' in ${{ matrix.repository }}"
           git branch -a
       - name: Update docker image for request manager
-        run:          
+        run: |
           echo "Checking out branch '${{ inputs.branch_name }}'"
           git checkout "${{ inputs.branch_name }}"
           echo "Checking out branch '${{ inputs.branch_name }}'"
           echo "${{ matrix.repository }}"
-          if (${{ matrix.repository }} == "ChinhTrieu-CoverGo/RequestManager"); then
+          if [ "${{ matrix.repository }}" == "ChinhTrieu-CoverGo/RequestManager" ]; then
             echo "current repo:${{ matrix.repository }}"
           fi
           
