@@ -119,6 +119,10 @@ jobs:
           file_path = "$tests_acceptance_amazon_FILE_PATH"
           old_auth_img = "$OLD_AUTH_IMG"
           new_auth_img = "$NEW_AUTH_IMG"
+          print("File path: $file_path")
+          print("Old auth image: $old_auth_img")
+          print("New auth image: $new_auth_img")
+
           
           with open(file_path, 'r') as f:
               content = f.read()
