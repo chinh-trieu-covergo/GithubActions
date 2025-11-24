@@ -73,7 +73,7 @@ jobs:
           echo "✅ Successfully created/updated branch '${{ inputs.branch_name }}' in ${{ matrix.repository }}"
           git branch -a
       - name: Update docker image for ${{ matrix.repository }}
-        if: ${{ matrix.repository }} == "ChinhTrieu-CoverGo/RequestManager"
+        if: matrix.repository == 'ChinhTrieu-CoverGo/RequestManager'
         run: |          
           git checkout ${{ inputs.branch_name }}
           Tests_Acceptance_Amazon_FILE_PATH="docker-compose-tests-acceptance-amazon.yml"
