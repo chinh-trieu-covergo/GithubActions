@@ -112,10 +112,10 @@ jobs:
           git add .
           
           # Commit the changes
-          git commit -m "chore: update docker image for $BRANCH_NAME"
+          git commit -m "chore: update docker image for ${{ inputs.branch_name }}"
           
           # Push to the branch
-          git push origin "$BRANCH_NAME"
+          git push origin "${{ inputs.branch_name }}"
           
-          echo "✅ Successfully committed and pushed docker image update to $BRANCH_NAME"
+          echo "✅ Successfully committed and pushed docker image update to ${{ inputs.branch_name }}"
       
