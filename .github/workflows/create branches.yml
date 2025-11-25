@@ -96,7 +96,8 @@ jobs:
           sed -i "s|$OLD_AUTH_IMG|$NEW_AUTH_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
           sed -i "s|$OLD_AUTH_IMG|$NEW_AUTH_IMG|g" "$TESTS_ACCEPTANCE_MONGODB_FILE_PATH"
           sed -i "s|$OLD_AUTH_IMG|$NEW_AUTH_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-          
+          echo "Updated auth image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
+
           OLD_PARTY_IMG="image: ghcr.io/covergo/party:master"
           NEW_PARTY_IMG="image: ghcr.io/covergo/party:${SANITIZED_BRANCH_NAME}"
           sed -i "s|$OLD_PARTY_IMG|$NEW_PARTY_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
@@ -104,7 +105,8 @@ jobs:
           sed -i "s|$OLD_PARTY_IMG|$NEW_PARTY_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
           sed -i "s|$OLD_PARTY_IMG|$NEW_PARTY_IMG|g" "$TESTS_ACCEPTANCE_MONGODB_FILE_PATH"
           sed -i "s|$OLD_PARTY_IMG|$NEW_PARTY_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-          
+          echo "Updated party image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
+
           OLD_CASES_IMG="image: ghcr.io/covergo/cases:master"
           NEW_CASES_IMG="image: ghcr.io/covergo/cases:${SANITIZED_BRANCH_NAME}"
           sed -i "s|$OLD_CASES_IMG|$NEW_CASES_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
@@ -112,7 +114,7 @@ jobs:
           sed -i "s|$OLD_CASES_IMG|$NEW_CASES_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
           sed -i "s|$OLD_CASES_IMG|$NEW_CASES_IMG|g" "$TESTS_ACCEPTANCE_MONGODB_FILE_PATH"
           sed -i "s|$OLD_CASES_IMG|$NEW_CASES_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-
+          echo "Updated cases image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
           OLD_CLAIMS3_IMG="image: ghcr.io/covergo/claims3:master"
           NEW_CLAIMS3_IMG="image: ghcr.io/covergo/claims3:${SANITIZED_BRANCH_NAME}"
           sed -i "s|$OLD_CLAIMS3_IMG|$NEW_CLAIMS3_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
@@ -120,7 +122,7 @@ jobs:
           sed -i "s|$OLD_CLAIMS3_IMG|$NEW_CLAIMS3_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
           sed -i "s|$OLD_CLAIMS3_IMG|$NEW_CLAIMS3_IMG|g" "$TESTS_ACCEPTANCE_MONGODB_FILE_PATH"
           sed -i "s|$OLD_CLAIMS3_IMG|$NEW_CLAIMS3_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-
+          echo "Updated claims3 image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
           OLD_FILESYSTEM_IMG="image: ghcr.io/covergo/filesystem:master"
           NEW_FILESYSTEM_IMG="image: ghcr.io/covergo/filesystem:${SANITIZED_BRANCH_NAME}"
           sed -i "s|$OLD_FILESYSTEM_IMG|$NEW_FILESYSTEM_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
@@ -136,7 +138,7 @@ jobs:
           sed -i "s|$OLD_POLICIES_IMG|$NEW_POLICIES_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
           sed -i "s|$OLD_POLICIES_IMG|$NEW_POLICIES_IMG|g" "$TESTS_ACCEPTANCE_MONGODB_FILE_PATH"
           sed -i "s|$OLD_POLICIES_IMG|$NEW_POLICIES_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-
+          echo "Updated policies image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
           OLD_USERS_IMG="image: ghcr.io/covergo/users:master"
           NEW_USERS_IMG="image: ghcr.io/covergo/users:${SANITIZED_BRANCH_NAME}"
           sed -i "s|$OLD_USERS_IMG|$NEW_USERS_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
@@ -144,7 +146,7 @@ jobs:
           sed -i "s|$OLD_USERS_IMG|$NEW_USERS_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
           sed -i "s|$OLD_USERS_IMG|$NEW_USERS_IMG|g" "$TESTS_ACCEPTANCE_MONGODB_FILE_PATH"
           sed -i "s|$OLD_USERS_IMG|$NEW_USERS_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-
+          echo "Updated users image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
           OLD_PRODUCTS_IMG="image: ghcr.io/covergo/products:master"
           NEW_PRODUCTS_IMG="image: ghcr.io/covergo/products:${SANITIZED_BRANCH_NAME}"
           sed -i "s|$OLD_PRODUCTS_IMG|$NEW_PRODUCTS_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
@@ -152,7 +154,7 @@ jobs:
           sed -i "s|$OLD_PRODUCTS_IMG|$NEW_PRODUCTS_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
           sed -i "s|$OLD_PRODUCTS_IMG|$NEW_PRODUCTS_IMG|g" "$TESTS_ACCEPTANCE_MONGODB_FILE_PATH"
           sed -i "s|$OLD_PRODUCTS_IMG|$NEW_PRODUCTS_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-
+          echo "Updated products image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
           OLD_PRICING_IMG="image: ghcr.io/covergo/pricing:master"
           NEW_PRICING_IMG="image: ghcr.io/covergo/pricing:${SANITIZED_BRANCH_NAME}"
           sed -i "s|$OLD_PRICING_IMG|$NEW_PRICING_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
@@ -168,7 +170,7 @@ jobs:
           sed -i "s|$OLD_ENTITY_MANAGEMENT_IMG|$NEW_ENTITY_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
           sed -i "s|$OLD_ENTITY_MANAGEMENT_IMG|$NEW_ENTITY_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_MONGODB_FILE_PATH"
           sed -i "s|$OLD_ENTITY_MANAGEMENT_IMG|$NEW_ENTITY_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-
+          echo "Updated entity management image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
           OLD_ENTITY_DIARY_IMG="image: ghcr.io/covergo/entity-diary:master"
           NEW_ENTITY_DIARY_IMG="image: ghcr.io/covergo/entity-diary:${SANITIZED_BRANCH_NAME}"
           sed -i "s|$OLD_ENTITY_DIARY_IMG|$NEW_ENTITY_DIARY_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
@@ -176,7 +178,7 @@ jobs:
           sed -i "s|$OLD_ENTITY_DIARY_IMG|$NEW_ENTITY_DIARY_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
           sed -i "s|$OLD_ENTITY_DIARY_IMG|$NEW_ENTITY_DIARY_IMG|g" "$TESTS_ACCEPTANCE_MONGODB_FILE_PATH"
           sed -i "s|$OLD_ENTITY_DIARY_IMG|$NEW_ENTITY_DIARY_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-
+          echo "Updated entity diary image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
           OLD_FINANCE_IMG="image: ghcr.io/covergo/finance:master"
           NEW_FINANCE_IMG="image: ghcr.io/covergo/finance:${SANITIZED_BRANCH_NAME}"
           sed -i "s|$OLD_FINANCE_IMG|$NEW_FINANCE_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
@@ -184,7 +186,7 @@ jobs:
           sed -i "s|$OLD_FINANCE_IMG|$NEW_FINANCE_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
           sed -i "s|$OLD_FINANCE_IMG|$NEW_FINANCE_IMG|g" "$TESTS_ACCEPTANCE_MONGODB_FILE_PATH"
           sed -i "s|$OLD_FINANCE_IMG|$NEW_FINANCE_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-
+          echo "Updated finance image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
           OLD_CHANNEL_MANAGEMENT_IMG="image: ghcr.io/covergo/channel-management:master"
           NEW_CHANNEL_MANAGEMENT_IMG="image: ghcr.io/covergo/channel-management:${SANITIZED_BRANCH_NAME}"
           sed -i "s|$OLD_CHANNEL_MANAGEMENT_IMG|$NEW_CHANNEL_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
@@ -192,7 +194,7 @@ jobs:
           sed -i "s|$OLD_CHANNEL_MANAGEMENT_IMG|$NEW_CHANNEL_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
           sed -i "s|$OLD_CHANNEL_MANAGEMENT_IMG|$NEW_CHANNEL_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_MONGODB_FILE_PATH"
           sed -i "s|$OLD_CHANNEL_MANAGEMENT_IMG|$NEW_CHANNEL_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-
+          echo "Updated channel management image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
           OLD_NOTIFICATION_CENTER_IMG="image: ghcr.io/covergo/notification-center:master"
           NEW_NOTIFICATION_CENTER_IMG="image: ghcr.io/covergo/notification-center:${SANITIZED_BRANCH_NAME}"
           sed -i "s|$OLD_NOTIFICATION_CENTER_IMG|$NEW_NOTIFICATION_CENTER_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
@@ -200,7 +202,7 @@ jobs:
           sed -i "s|$OLD_NOTIFICATION_CENTER_IMG|$NEW_NOTIFICATION_CENTER_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
           sed -i "s|$OLD_NOTIFICATION_CENTER_IMG|$NEW_NOTIFICATION_CENTER_IMG|g" "$TESTS_ACCEPTANCE_MONGODB_FILE_PATH"
           sed -i "s|$OLD_NOTIFICATION_CENTER_IMG|$NEW_NOTIFICATION_CENTER_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-
+          echo "Updated notification center image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
           OLD_TASK_MANAGEMENT_IMG="image: ghcr.io/covergo/task-management:master"
           NEW_TASK_MANAGEMENT_IMG="image: ghcr.io/covergo/task-management:${SANITIZED_BRANCH_NAME}"
           sed -i "s|$OLD_TASK_MANAGEMENT_IMG|$NEW_TASK_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
@@ -208,7 +210,7 @@ jobs:
           sed -i "s|$OLD_TASK_MANAGEMENT_IMG|$NEW_TASK_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
           sed -i "s|$OLD_TASK_MANAGEMENT_IMG|$NEW_TASK_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_MONGODB_FILE_PATH"
           sed -i "s|$OLD_TASK_MANAGEMENT_IMG|$NEW_TASK_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-
+          echo "Updated task management image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
 
           # Check if there are any changes
           if git diff --quiet; then
@@ -227,6 +229,7 @@ jobs:
           
           echo "✅ Successfully committed and pushed docker image update to ${{ inputs.branch_name }}"
       - name: Update build publish to use gamma branch
+        if: matrix.repository == 'ChinhTrieu-CoverGo/RequestManager'
         run: |
           git checkout ${{ inputs.branch_name }}
           git pull origin ${{ inputs.branch_name }}
