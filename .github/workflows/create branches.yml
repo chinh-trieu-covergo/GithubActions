@@ -215,7 +215,7 @@ jobs:
           
           echo "✅ Successfully committed and pushed docker image update to ${{ inputs.branch_name }}"
       - name: Update build publish to use gamma branch
-        if: matrix.repository == 'ChinhTrieu-CoverGo/RequestManager'
+        if: matrix.repository == 'ChinhTrieu-CoverGo/Reference'
         run: |
           git checkout ${{ inputs.branch_name }}
           git pull origin ${{ inputs.branch_name }}
