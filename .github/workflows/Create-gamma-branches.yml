@@ -16,8 +16,8 @@ jobs:
     strategy:
       matrix:
         repository:
-          - ChinhTrieu-CoverGo
-          - ChinhTrieu-CoverGo          
+          - ChinhTrieu-CoverGo/Reference
+          - ChinhTrieu-CoverGo/RequestManager
     steps:
       - name: Checkout ${{ matrix.repository }}
         env:
