@@ -71,7 +71,7 @@ jobs:
           git push -u origin ${{ inputs.branch_name }}
           
           echo "✅ Successfully created/updated branch '${{ inputs.branch_name }}' in ${{ matrix.repository }}"          
-      - name: Update docker image for ${{ matrix.repository }}
+      - name: Update docker image for RequestManager repository
         if: matrix.repository == 'ChinhTrieu-CoverGo/RequestManager'
         run: |          
           git checkout ${{ inputs.branch_name }}
@@ -134,6 +134,7 @@ jobs:
           sed -i "s|$OLD_POLICIES_IMG|$NEW_POLICIES_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
           sed -i "s|$OLD_POLICIES_IMG|$NEW_POLICIES_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
           echo "Updated policies image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
+          
           OLD_USERS_IMG="image: ghcr.io/covergo/users:master"
           NEW_USERS_IMG="image: ghcr.io/covergo/users:${SANITIZED_BRANCH_NAME}"
           sed -i "s|$OLD_USERS_IMG|$NEW_USERS_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
@@ -141,6 +142,7 @@ jobs:
           sed -i "s|$OLD_USERS_IMG|$NEW_USERS_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
           sed -i "s|$OLD_USERS_IMG|$NEW_USERS_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
           echo "Updated users image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
+          
           OLD_PRODUCTS_IMG="image: ghcr.io/covergo/products:master"
           NEW_PRODUCTS_IMG="image: ghcr.io/covergo/products:${SANITIZED_BRANCH_NAME}"
           sed -i "s|$OLD_PRODUCTS_IMG|$NEW_PRODUCTS_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
@@ -148,6 +150,7 @@ jobs:
           sed -i "s|$OLD_PRODUCTS_IMG|$NEW_PRODUCTS_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
           sed -i "s|$OLD_PRODUCTS_IMG|$NEW_PRODUCTS_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
           echo "Updated products image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
+
           OLD_PRICING_IMG="image: ghcr.io/covergo/pricing:master"
           NEW_PRICING_IMG="image: ghcr.io/covergo/pricing:${SANITIZED_BRANCH_NAME}"
           sed -i "s|$OLD_PRICING_IMG|$NEW_PRICING_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
@@ -162,6 +165,7 @@ jobs:
           sed -i "s|$OLD_ENTITY_MANAGEMENT_IMG|$NEW_ENTITY_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
           sed -i "s|$OLD_ENTITY_MANAGEMENT_IMG|$NEW_ENTITY_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
           echo "Updated entity management image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
+
           OLD_ENTITY_DIARY_IMG="image: ghcr.io/covergo/entity-diary:master"
           NEW_ENTITY_DIARY_IMG="image: ghcr.io/covergo/entity-diary:${SANITIZED_BRANCH_NAME}"
           sed -i "s|$OLD_ENTITY_DIARY_IMG|$NEW_ENTITY_DIARY_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
@@ -169,6 +173,7 @@ jobs:
           sed -i "s|$OLD_ENTITY_DIARY_IMG|$NEW_ENTITY_DIARY_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
           sed -i "s|$OLD_ENTITY_DIARY_IMG|$NEW_ENTITY_DIARY_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
           echo "Updated entity diary image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
+
           OLD_FINANCE_IMG="image: ghcr.io/covergo/finance:master"
           NEW_FINANCE_IMG="image: ghcr.io/covergo/finance:${SANITIZED_BRANCH_NAME}"
           sed -i "s|$OLD_FINANCE_IMG|$NEW_FINANCE_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
@@ -176,12 +181,14 @@ jobs:
           sed -i "s|$OLD_FINANCE_IMG|$NEW_FINANCE_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
           sed -i "s|$OLD_FINANCE_IMG|$NEW_FINANCE_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
           echo "Updated finance image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
+
           OLD_CHANNEL_MANAGEMENT_IMG="image: ghcr.io/covergo/channel-management:master"
           NEW_CHANNEL_MANAGEMENT_IMG="image: ghcr.io/covergo/channel-management:${SANITIZED_BRANCH_NAME}"
           sed -i "s|$OLD_CHANNEL_MANAGEMENT_IMG|$NEW_CHANNEL_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
           sed -i "s|$OLD_CHANNEL_MANAGEMENT_IMG|$NEW_CHANNEL_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_AZURE_FILE_PATH"
           sed -i "s|$OLD_CHANNEL_MANAGEMENT_IMG|$NEW_CHANNEL_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
           sed -i "s|$OLD_CHANNEL_MANAGEMENT_IMG|$NEW_CHANNEL_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
+
           echo "Updated channel management image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
           OLD_NOTIFICATION_CENTER_IMG="image: ghcr.io/covergo/notification-center:master"
           NEW_NOTIFICATION_CENTER_IMG="image: ghcr.io/covergo/notification-center:${SANITIZED_BRANCH_NAME}"
@@ -190,6 +197,7 @@ jobs:
           sed -i "s|$OLD_NOTIFICATION_CENTER_IMG|$NEW_NOTIFICATION_CENTER_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
           sed -i "s|$OLD_NOTIFICATION_CENTER_IMG|$NEW_NOTIFICATION_CENTER_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
           echo "Updated notification center image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
+
           OLD_TASK_MANAGEMENT_IMG="image: ghcr.io/covergo/task-management:master"
           NEW_TASK_MANAGEMENT_IMG="image: ghcr.io/covergo/task-management:${SANITIZED_BRANCH_NAME}"
           sed -i "s|$OLD_TASK_MANAGEMENT_IMG|$NEW_TASK_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
@@ -214,7 +222,7 @@ jobs:
           git push origin "${{ inputs.branch_name }}"
           
           echo "✅ Successfully committed and pushed docker image update to ${{ inputs.branch_name }}"
-      - name: Update build publish to use gamma branch
+      - name: Update build publish to use gamma branch for Reference repository
         if: matrix.repository == 'ChinhTrieu-CoverGo/Reference'
         run: |
           git checkout ${{ inputs.branch_name }}
@@ -224,24 +232,21 @@ jobs:
           cat $BUILD_PUBLISH_FILE_PATH
 
           # Check if 'branchForTag' exists under the 'with:' section. If it does, update its value.
-          # If it doesn't, add it to the 'with:' section.
+          # If it doesn't, add it to the 'with:' section.          
           if grep -A 20 "with:" "$BUILD_PUBLISH_FILE_PATH" | grep -q "branchForTag:"; then
             # Update existing branchForTag value
-            sed -i "/with:/,/secrets:/ s/^\([[:space:]]*branchForTag:\).*/\1 \${{ inputs.branch_name }}/" "$BUILD_PUBLISH_FILE_PATH"
+            sed -i "s/^[[:space:]]*branchForTag:.*/branchForTag: \${{ inputs.branch_name }}/" "$BUILD_PUBLISH_FILE_PATH"
           else
-            # Add branchForTag under the last 'with:' entry before 'secrets:'
-            # Find where 'secrets:' starts relative to 'with:'
+            # Add branchForTag under the first 'with:' entry
             with_lineno=$(grep -n "with:" "$BUILD_PUBLISH_FILE_PATH" | head -n1 | cut -d: -f1)
-            secrets_lineno=$(grep -n "secrets:" "$BUILD_PUBLISH_FILE_PATH" | head -n1 | cut -d: -f1)
-            if [ -n "$with_lineno" ] && [ -n "$secrets_lineno" ]; then
-              insert_lineno=$((secrets_lineno - 1))
-              # Find the indentation level for with: section
+            if [ -n "$with_lineno" ]; then
+              # Find the indentation level after 'with:' line
               indent=$(awk "NR==$with_lineno+1" "$BUILD_PUBLISH_FILE_PATH" | grep -o '^[[:space:]]*')
-              # Insert branchForTag before secrets:
-              sed -i "${insert_lineno}i\\${indent}branchForTag: \${{ inputs.branch_name }}" "$BUILD_PUBLISH_FILE_PATH"
+              # Insert branchForTag after 'with:' line
+              insert_lineno=$with_lineno
+              sed -i "$((insert_lineno+1))i\\${indent}branchForTag: \${{ inputs.branch_name }}" "$BUILD_PUBLISH_FILE_PATH"
             fi
-          fi
-          
+          fi         
 
           # Check if there are any changes
           if git diff --quiet; then
