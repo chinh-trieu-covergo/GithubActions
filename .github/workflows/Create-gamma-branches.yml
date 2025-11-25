@@ -16,21 +16,24 @@ jobs:
     strategy:
       matrix:
         repository:
-          - ChinhTrieu-CoverGo/Reference
-          - ChinhTrieu-CoverGo/RequestManager
+          - ChinhTrieu-CoverGo
+          - ChinhTrieu-CoverGo
           # Add more repositories here as needed
           # - CoverGo/Gateway
           # - CoverGo/AnotherRepository
           # - ...
     steps:
       - name: Checkout ${{ matrix.repository }}
+        env:
+          BRANCH_NAME: ${{ inputs.branch_name }}
         uses: actions/checkout@v4
         with:
           repository: ${{ matrix.repository }}
           token: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
           fetch-depth: 1
-
       - name: Create and push branch in ${{ matrix.repository }}
+        env:
+          BRANCH_NAME: ${{ inputs.branch_name }}
         run: |
           git config user.name "coverbot"
           git config user.email "infrastructure@covergo.com"
@@ -46,7 +49,7 @@ jobs:
             elif git show-ref --verify --quiet refs/remotes/origin/master; then
               DEFAULT_BRANCH="master"
             else
-              echo "Error: Could not determine default branch for ${{ matrix.repository }}"
+              echo "Error: Could not determine default branch for $BRANCH_NAME"
               exit 1
             fi
           fi
@@ -58,23 +61,25 @@ jobs:
           git pull origin $DEFAULT_BRANCH
           
           # Check if branch already exists
-          if git show-ref --verify --quiet refs/heads/${{ inputs.branch_name }}; then
-            echo "⚠️  Branch '${{ inputs.branch_name }}' already exists locally, checking it out"
-            git checkout ${{ inputs.branch_name }}
-            git pull origin ${{ inputs.branch_name }} || true
+          if git show-ref --verify --quiet refs/heads/$BRANCH_NAME; then
+            echo "⚠️  Branch '$BRANCH_NAME' already exists locally, checking it out"
+            git checkout $BRANCH_NAME
+            git pull origin $BRANCH_NAME || true
           else
             # Create new branch
-            git checkout -b ${{ inputs.branch_name }}
+            git checkout -b $BRANCH_NAME
           fi
           
           # Push the new branch
-          git push -u origin ${{ inputs.branch_name }}
+          git push -u origin $BRANCH_NAME
           
-          echo "✅ Successfully created/updated branch '${{ inputs.branch_name }}' in ${{ matrix.repository }}"          
+          echo "✅ Successfully created/updated branch '$BRANCH_NAME' in ${{ matrix.repository }}"          
       - name: Update docker image for RequestManager repository
+        env:
+          BRANCH_NAME: ${{ inputs.branch_name }}
         if: matrix.repository == 'ChinhTrieu-CoverGo/RequestManager'
         run: |          
-          git checkout ${{ inputs.branch_name }}
+          git checkout $BRANCH_NAME
 
           # List of docker-compose files to update
           TESTS_ACCEPTANCE_AMAZON_FILE_PATH="docker-compose-tests-acceptance-amazon.yml"          
@@ -84,9 +89,9 @@ jobs:
           
           ls -a
 
-          # Update all relevant CoverGo docker images from :master to :${{ inputs.branch_name }}
+          # Update all relevant CoverGo docker images from :master to :$BRANCH_NAME
           # Replace '/' with '-' in branch name for use in docker image tags
-          SANITIZED_BRANCH_NAME=$(echo "${{ inputs.branch_name }}" | tr '/' '-')
+          SANITIZED_BRANCH_NAME=$(echo "$BRANCH_NAME" | tr '/' '-')
 
           # Use sed to replace the old covergo-auth image with the new one in the docker-compose file
           OLD_AUTH_IMG="image: ghcr.io/covergo/auth:master"
@@ -216,17 +221,19 @@ jobs:
           git add .
           
           # Commit the changes
-          git commit -m "chore: update docker image for ${{ inputs.branch_name }}"
+          git commit -m "chore: update docker image for $BRANCH_NAME"
           
           # Push to the branch
-          git push origin "${{ inputs.branch_name }}"
+          git push origin "$BRANCH_NAME"
           
-          echo "✅ Successfully committed and pushed docker image update to ${{ inputs.branch_name }}"
+          echo "✅ Successfully committed and pushed docker image update to $BRANCH_NAME"
       - name: Update build publish to use gamma branch for Reference repository
+        env: 
+          BRANCH_NAME: ${{ inputs.branch_name }}
         if: matrix.repository == 'ChinhTrieu-CoverGo/Reference'
         run: |
-          git checkout ${{ inputs.branch_name }}
-          git pull origin ${{ inputs.branch_name }}
+          git checkout $BRANCH_NAME
+          git pull origin $BRANCH_NAME
           BUILD_PUBLISH_FILE_PATH=".github/workflows/build-publish.yml"
 
           cat $BUILD_PUBLISH_FILE_PATH
@@ -235,7 +242,7 @@ jobs:
           # If it doesn't, add it to the 'with:' section.          
           if grep -A 20 "with:" "$BUILD_PUBLISH_FILE_PATH" | grep -q "branchForTag:"; then
             # Update existing branchForTag value
-            sed -i "s/^[[:space:]]*branchForTag:.*/branchForTag: \${{ inputs.branch_name }}/" "$BUILD_PUBLISH_FILE_PATH"
+            sed -i "s/^[[:space:]]*branchForTag:.*/branchForTag: \$BRANCH_NAME/" "$BUILD_PUBLISH_FILE_PATH"
           else
             # Add branchForTag under the first 'with:' entry
             with_lineno=$(grep -n "with:" "$BUILD_PUBLISH_FILE_PATH" | head -n1 | cut -d: -f1)
@@ -244,7 +251,7 @@ jobs:
               indent=$(awk "NR==$with_lineno+1" "$BUILD_PUBLISH_FILE_PATH" | grep -o '^[[:space:]]*')
               # Insert branchForTag after 'with:' line
               insert_lineno=$with_lineno
-              sed -i "$((insert_lineno+1))i\\${indent}branchForTag: \${{ inputs.branch_name }}" "$BUILD_PUBLISH_FILE_PATH"
+              sed -i "$((insert_lineno+1))i\\${indent}branchForTag: \$BRANCH_NAME" "$BUILD_PUBLISH_FILE_PATH"
             fi
           fi         
 
@@ -256,6 +263,6 @@ jobs:
 
           git add .
           git commit -m "chore: update build publish to use gamma branch"
-          git push origin ${{ inputs.branch_name }}
-          echo "✅ Successfully committed and pushed build publish update to ${{ inputs.branch_name }}"
+          git push origin $BRANCH_NAME
+          echo "✅ Successfully committed and pushed build publish update to $BRANCH_NAME"
 
