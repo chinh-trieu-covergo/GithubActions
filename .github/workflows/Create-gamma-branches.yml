@@ -4,24 +4,20 @@ on:
   workflow_dispatch:
     inputs:
       branch_name:
-        description: 'Branch name to create'
+        description: "Branch name to create"
         required: true
         type: string
 
 jobs:
-  create-branch:
+  create-gamma-branches:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     strategy:
       matrix:
         repository:
-          - ChinhTrieu-CoverGo/RequestManager
-          - ChinhTrieu-CoverGo/Reference
-          # Add more repositories here as needed
-          # - CoverGo/Gateway
-          # - CoverGo/AnotherRepository
-          # - ...
+          - ChinhTrieu-CoverGo
+          - ChinhTrieu-CoverGo          
     steps:
       - name: Checkout ${{ matrix.repository }}
         env:
@@ -40,7 +36,7 @@ jobs:
           
           # Get the default branch (main or master)
           # Try to get the default branch from remote HEAD
-          DEFAULT_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo "")
+          DEFAULT_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@'" || echo "")
           
           # If that fails, try common branch names
           if [ -z "$DEFAULT_BRANCH" ]; then
@@ -235,23 +231,23 @@ jobs:
           git checkout $BRANCH_NAME
           git pull origin $BRANCH_NAME
           BUILD_PUBLISH_FILE_PATH=".github/workflows/build-publish.yml"
-
+          SANITIZED_BRANCH_NAME=$(echo "$BRANCH_NAME" | tr '/' '-')
           cat $BUILD_PUBLISH_FILE_PATH
 
           # Check if 'branchForTag' exists under the 'with:' section. If it does, update its value.
           # If it doesn't, add it to the 'with:' section.          
           if grep -A 20 "with:" "$BUILD_PUBLISH_FILE_PATH" | grep -q "branchForTag:"; then
             # Update existing branchForTag value
-            sed -i "s/^[[:space:]]*branchForTag:.*/branchForTag: \${BRANCH_NAME}/" "$BUILD_PUBLISH_FILE_PATH"
+            sed -i "s/^[[:space:]]*branchForTag:.*/branchForTag: \$SANITIZED_BRANCH_NAME/" "$BUILD_PUBLISH_FILE_PATH"
           else
             # Add branchForTag under the first 'with:' entry
             with_lineno=$(grep -n "with:" "$BUILD_PUBLISH_FILE_PATH" | head -n1 | cut -d: -f1)
             if [ -n "$with_lineno" ]; then
               # Find the indentation level after 'with:' line
               indent=$(awk "NR==$with_lineno+1" "$BUILD_PUBLISH_FILE_PATH" | grep -o '^[[:space:]]*')
-              # Insert branchForTag after 'with:' line
+              # Insert branchForTag after 'with:' line using the value of the environment variable BRANCH_NAME
               insert_lineno=$with_lineno
-              sed -i "$((insert_lineno+1))i\\${indent}branchForTag: \${$BRANCH_NAME}" "$BUILD_PUBLISH_FILE_PATH"
+              sed -i "$((insert_lineno+1))i\\${indent}branchForTag: $SANITIZED_BRANCH_NAME" "$BUILD_PUBLISH_FILE_PATH"
             fi
           fi         
 
