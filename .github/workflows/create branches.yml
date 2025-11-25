@@ -83,6 +83,8 @@ jobs:
           TESTS_ACCEPTANCE_MONGODB_FILE_PATH="docker-compose-tests-acceptance-mongodb.yml"
           TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH="docker-compose-tests-acceptance-rabbitmq.yml"
           
+          ls -a
+
           # Update all relevant CoverGo docker images from :master to :${{ inputs.branch_name }}
           # Replace '/' with '-' in branch name for use in docker image tags
           SANITIZED_BRANCH_NAME=$(echo "${{ inputs.branch_name }}" | tr '/' '-')
