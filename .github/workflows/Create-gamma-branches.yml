@@ -1,4 +1,4 @@
-name: Create gamma branch in multiple CoverGo repositories
+name: Create gamma branches in multiple CoverGo repositories
 
 on:
   workflow_dispatch:
