@@ -242,7 +242,7 @@ jobs:
           # If it doesn't, add it to the 'with:' section.          
           if grep -A 20 "with:" "$BUILD_PUBLISH_FILE_PATH" | grep -q "branchForTag:"; then
             # Update existing branchForTag value
-            sed -i "s/^[[:space:]]*branchForTag:.*/branchForTag: \$BRANCH_NAME/" "$BUILD_PUBLISH_FILE_PATH"
+            sed -i "s/^[[:space:]]*branchForTag:.*/branchForTag: \${BRANCH_NAME}/" "$BUILD_PUBLISH_FILE_PATH"
           else
             # Add branchForTag under the first 'with:' entry
             with_lineno=$(grep -n "with:" "$BUILD_PUBLISH_FILE_PATH" | head -n1 | cut -d: -f1)
@@ -251,7 +251,7 @@ jobs:
               indent=$(awk "NR==$with_lineno+1" "$BUILD_PUBLISH_FILE_PATH" | grep -o '^[[:space:]]*')
               # Insert branchForTag after 'with:' line
               insert_lineno=$with_lineno
-              sed -i "$((insert_lineno+1))i\\${indent}branchForTag: \$BRANCH_NAME" "$BUILD_PUBLISH_FILE_PATH"
+              sed -i "$((insert_lineno+1))i\\${indent}branchForTag: \${BRANCH_NAME}" "$BUILD_PUBLISH_FILE_PATH"
             fi
           fi         
 
