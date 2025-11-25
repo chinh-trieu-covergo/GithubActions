@@ -221,7 +221,7 @@ jobs:
           git pull origin ${{ inputs.branch_name }}
           BUILD_PUBLISH_FILE_PATH=".github/workflows/build-publish.yml"
 
-          cat BUILD_PUBLISH_FILE_PATH
+          cat $BUILD_PUBLISH_FILE_PATH
 
           # Check if 'branchForTag' exists under the 'with:' section. If it does, update its value.
           # If it doesn't, add it to the 'with:' section.
