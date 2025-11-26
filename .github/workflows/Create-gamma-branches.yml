@@ -84,16 +84,13 @@ jobs:
           echo "✅ Successfully created/updated branch '$BRANCH_NAME' in ${{ matrix.repository }}"          
       - name: Update docker image for RequestManager repository
         env:
-          BRANCH_NAME: ${{ inputs.branch_name }}
-        if: matrix.repository == 'ChinhTrieu-CoverGo/RequestManager'
+          BRANCH_NAME: ${{ inputs.branch_name }}       
         run: |          
           git checkout "$BRANCH_NAME"
 
           # List of docker-compose files to update
-          TESTS_ACCEPTANCE_AMAZON_FILE_PATH="docker-compose-tests-acceptance-amazon.yml"          
-          TESTS_ACCEPTANCE_AZURE_FILE_PATH="docker-compose-tests-acceptance-azure.yml"
-          TESTS_ACCEPTANCE_GOOGLE_FILE_PATH="docker-compose-tests-acceptance-google.yml"
-          TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH="docker-compose-tests-acceptance-rabbitmq.yml"
+          # Collect all docker-compose files in the repository (recursively)
+          DOCKER_COMPOSE_FILES=$(find . -type f -name "docker-compose*.yml" -o -name "docker-compose*.yaml")
           
 
           # Update all relevant CoverGo docker images from :master to :$BRANCH_NAME
@@ -105,11 +102,10 @@ jobs:
             image_name=$(echo "$service" | tr '[:upper:]' '[:lower:]')
             old_img="image: ghcr.io/covergo/${image_name}:master"
             new_img="image: ghcr.io/covergo/${image_name}:${SANITIZED_BRANCH_NAME}"
-            sed -i "s|$old_img|$new_img|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-            sed -i "s|$old_img|$new_img|g" "$TESTS_ACCEPTANCE_AZURE_FILE_PATH"
-            sed -i "s|$old_img|$new_img|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
-            sed -i "s|$old_img|$new_img|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-            echo "Updated $service image in all docker-compose test files"
+            for dc_file in $DOCKER_COMPOSE_FILES; do
+              sed -i "s|$old_img|$new_img|g" "$dc_file"
+            done
+            echo "Updated $service image in all docker-compose files"
           done
           # Check if there are any changes
           if git diff --quiet; then
@@ -130,7 +126,7 @@ jobs:
       - name: Update build publish to use gamma branch for Reference repository
         env: 
           BRANCH_NAME: ${{ inputs.branch_name }}
-        if: matrix.repository == 'ChinhTrieu-CoverGo/Reference'
+        if: matrix.repository == 'CoverGo/Reference'
         run: |
           git checkout "$BRANCH_NAME"
           git pull origin "$BRANCH_NAME"
