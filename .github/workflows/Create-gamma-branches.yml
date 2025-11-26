@@ -4,12 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       branch_name:
-        description: "Branch name to create"
+        description: 'Branch name to create'
         required: true
         type: string
 
 jobs:
-  create-gamma-branches:
+  create-branch:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -18,7 +18,19 @@ jobs:
         repository:
           - ChinhTrieu-CoverGo/Reference
           - ChinhTrieu-CoverGo/RequestManager
+          # Add more repositories here as needed
+          # - CoverGo/Gateway
+          # - CoverGo/AnotherRepository
+          # - ...
     steps:
+      - name: Validate branch name
+        env:
+          BRANCH_NAME: ${{ inputs.branch_name }}
+        run: |
+          if [[ ! "$BRANCH_NAME" =~ ^[a-zA-Z0-9/_-]+$ ]]; then 
+            echo "Invalid branch name. Only alphanumeric characters, hyphens, underscores, and slashes are allowed." 
+            exit 1 
+          fi
       - name: Checkout ${{ matrix.repository }}
         env:
           BRANCH_NAME: ${{ inputs.branch_name }}
@@ -36,7 +48,7 @@ jobs:
           
           # Get the default branch (main or master)
           # Try to get the default branch from remote HEAD
-          DEFAULT_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed "s@^refs/remotes/origin/@@" || echo "")
+          DEFAULT_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo "")
           
           # If that fails, try common branch names
           if [ -z "$DEFAULT_BRANCH" ]; then
@@ -45,7 +57,7 @@ jobs:
             elif git show-ref --verify --quiet refs/remotes/origin/master; then
               DEFAULT_BRANCH="master"
             else
-              echo "Error: Could not determine default branch for $BRANCH_NAME"
+              echo "Error: Could not determine default branch for ${{ matrix.repository }}"
               exit 1
             fi
           fi
@@ -53,21 +65,21 @@ jobs:
           echo "Using default branch: $DEFAULT_BRANCH"
           
           # Checkout the default branch
-          git checkout $DEFAULT_BRANCH
-          git pull origin $DEFAULT_BRANCH
+          git checkout "$DEFAULT_BRANCH"
+          git pull origin "$DEFAULT_BRANCH"
           
           # Check if branch already exists
-          if git show-ref --verify --quiet refs/heads/$BRANCH_NAME; then
+          if git show-ref --verify --quiet refs/heads/"$BRANCH_NAME"; then
             echo "⚠️  Branch '$BRANCH_NAME' already exists locally, checking it out"
-            git checkout $BRANCH_NAME
-            git pull origin $BRANCH_NAME || true
+            git checkout "$BRANCH_NAME"
+            git pull origin "$BRANCH_NAME" || true
           else
             # Create new branch
-            git checkout -b $BRANCH_NAME
+            git checkout -b "$BRANCH_NAME"
           fi
           
           # Push the new branch
-          git push -u origin $BRANCH_NAME
+          git push -u origin "$BRANCH_NAME"
           
           echo "✅ Successfully created/updated branch '$BRANCH_NAME' in ${{ matrix.repository }}"          
       - name: Update docker image for RequestManager repository
@@ -75,7 +87,7 @@ jobs:
           BRANCH_NAME: ${{ inputs.branch_name }}
         if: matrix.repository == 'ChinhTrieu-CoverGo/RequestManager'
         run: |          
-          git checkout $BRANCH_NAME
+          git checkout "$BRANCH_NAME"
 
           # List of docker-compose files to update
           TESTS_ACCEPTANCE_AMAZON_FILE_PATH="docker-compose-tests-acceptance-amazon.yml"          
@@ -83,130 +95,22 @@ jobs:
           TESTS_ACCEPTANCE_GOOGLE_FILE_PATH="docker-compose-tests-acceptance-google.yml"
           TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH="docker-compose-tests-acceptance-rabbitmq.yml"
           
-          ls -a
 
           # Update all relevant CoverGo docker images from :master to :$BRANCH_NAME
           # Replace '/' with '-' in branch name for use in docker image tags
-          SANITIZED_BRANCH_NAME=$(echo "$BRANCH_NAME" | tr '/' '-')
-
-          # Use sed to replace the old covergo-auth image with the new one in the docker-compose file
-          OLD_AUTH_IMG="image: ghcr.io/covergo/auth:master"
-          NEW_AUTH_IMG="image: ghcr.io/covergo/auth:${SANITIZED_BRANCH_NAME}"
-
-          sed -i "s|$OLD_AUTH_IMG|$NEW_AUTH_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-          sed -i "s|$OLD_AUTH_IMG|$NEW_AUTH_IMG|g" "$TESTS_ACCEPTANCE_AZURE_FILE_PATH"
-          sed -i "s|$OLD_AUTH_IMG|$NEW_AUTH_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
-          sed -i "s|$OLD_AUTH_IMG|$NEW_AUTH_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-          echo "Updated auth image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-
-          OLD_PARTY_IMG="image: ghcr.io/covergo/party:master"
-          NEW_PARTY_IMG="image: ghcr.io/covergo/party:${SANITIZED_BRANCH_NAME}"
-          sed -i "s|$OLD_PARTY_IMG|$NEW_PARTY_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-          sed -i "s|$OLD_PARTY_IMG|$NEW_PARTY_IMG|g" "$TESTS_ACCEPTANCE_AZURE_FILE_PATH"
-          sed -i "s|$OLD_PARTY_IMG|$NEW_PARTY_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
-          sed -i "s|$OLD_PARTY_IMG|$NEW_PARTY_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-          echo "Updated party image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-
-          OLD_CASES_IMG="image: ghcr.io/covergo/cases:master"
-          NEW_CASES_IMG="image: ghcr.io/covergo/cases:${SANITIZED_BRANCH_NAME}"
-          sed -i "s|$OLD_CASES_IMG|$NEW_CASES_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-          sed -i "s|$OLD_CASES_IMG|$NEW_CASES_IMG|g" "$TESTS_ACCEPTANCE_AZURE_FILE_PATH"
-          sed -i "s|$OLD_CASES_IMG|$NEW_CASES_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
-          sed -i "s|$OLD_CASES_IMG|$NEW_CASES_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-          echo "Updated cases image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-          OLD_CLAIMS3_IMG="image: ghcr.io/covergo/claims3:master"
-          NEW_CLAIMS3_IMG="image: ghcr.io/covergo/claims3:${SANITIZED_BRANCH_NAME}"
-          sed -i "s|$OLD_CLAIMS3_IMG|$NEW_CLAIMS3_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-          sed -i "s|$OLD_CLAIMS3_IMG|$NEW_CLAIMS3_IMG|g" "$TESTS_ACCEPTANCE_AZURE_FILE_PATH"
-          sed -i "s|$OLD_CLAIMS3_IMG|$NEW_CLAIMS3_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
-          sed -i "s|$OLD_CLAIMS3_IMG|$NEW_CLAIMS3_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-          echo "Updated claims3 image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-          OLD_FILESYSTEM_IMG="image: ghcr.io/covergo/filesystem:master"
-          NEW_FILESYSTEM_IMG="image: ghcr.io/covergo/filesystem:${SANITIZED_BRANCH_NAME}"
-          sed -i "s|$OLD_FILESYSTEM_IMG|$NEW_FILESYSTEM_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-          sed -i "s|$OLD_FILESYSTEM_IMG|$NEW_FILESYSTEM_IMG|g" "$TESTS_ACCEPTANCE_AZURE_FILE_PATH"
-          sed -i "s|$OLD_FILESYSTEM_IMG|$NEW_FILESYSTEM_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
-          sed -i "s|$OLD_FILESYSTEM_IMG|$NEW_FILESYSTEM_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-
-          OLD_POLICIES_IMG="image: ghcr.io/covergo/policies:master"
-          NEW_POLICIES_IMG="image: ghcr.io/covergo/policies:${SANITIZED_BRANCH_NAME}"
-          sed -i "s|$OLD_POLICIES_IMG|$NEW_POLICIES_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-          sed -i "s|$OLD_POLICIES_IMG|$NEW_POLICIES_IMG|g" "$TESTS_ACCEPTANCE_AZURE_FILE_PATH"
-          sed -i "s|$OLD_POLICIES_IMG|$NEW_POLICIES_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
-          sed -i "s|$OLD_POLICIES_IMG|$NEW_POLICIES_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-          echo "Updated policies image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
+          SANITIZED_BRANCH_NAME=$(echo "$BRANCH_NAME" | tr '/' '-')          
           
-          OLD_USERS_IMG="image: ghcr.io/covergo/users:master"
-          NEW_USERS_IMG="image: ghcr.io/covergo/users:${SANITIZED_BRANCH_NAME}"
-          sed -i "s|$OLD_USERS_IMG|$NEW_USERS_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-          sed -i "s|$OLD_USERS_IMG|$NEW_USERS_IMG|g" "$TESTS_ACCEPTANCE_AZURE_FILE_PATH"
-          sed -i "s|$OLD_USERS_IMG|$NEW_USERS_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
-          sed -i "s|$OLD_USERS_IMG|$NEW_USERS_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-          echo "Updated users image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-          
-          OLD_PRODUCTS_IMG="image: ghcr.io/covergo/products:master"
-          NEW_PRODUCTS_IMG="image: ghcr.io/covergo/products:${SANITIZED_BRANCH_NAME}"
-          sed -i "s|$OLD_PRODUCTS_IMG|$NEW_PRODUCTS_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-          sed -i "s|$OLD_PRODUCTS_IMG|$NEW_PRODUCTS_IMG|g" "$TESTS_ACCEPTANCE_AZURE_FILE_PATH"
-          sed -i "s|$OLD_PRODUCTS_IMG|$NEW_PRODUCTS_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
-          sed -i "s|$OLD_PRODUCTS_IMG|$NEW_PRODUCTS_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-          echo "Updated products image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-
-          OLD_PRICING_IMG="image: ghcr.io/covergo/pricing:master"
-          NEW_PRICING_IMG="image: ghcr.io/covergo/pricing:${SANITIZED_BRANCH_NAME}"
-          sed -i "s|$OLD_PRICING_IMG|$NEW_PRICING_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-          sed -i "s|$OLD_PRICING_IMG|$NEW_PRICING_IMG|g" "$TESTS_ACCEPTANCE_AZURE_FILE_PATH"
-          sed -i "s|$OLD_PRICING_IMG|$NEW_PRICING_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
-          sed -i "s|$OLD_PRICING_IMG|$NEW_PRICING_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-
-          OLD_ENTITY_MANAGEMENT_IMG="image: ghcr.io/covergo/entity-management:master"
-          NEW_ENTITY_MANAGEMENT_IMG="image: ghcr.io/covergo/entity-management:${SANITIZED_BRANCH_NAME}"
-          sed -i "s|$OLD_ENTITY_MANAGEMENT_IMG|$NEW_ENTITY_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-          sed -i "s|$OLD_ENTITY_MANAGEMENT_IMG|$NEW_ENTITY_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_AZURE_FILE_PATH"
-          sed -i "s|$OLD_ENTITY_MANAGEMENT_IMG|$NEW_ENTITY_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
-          sed -i "s|$OLD_ENTITY_MANAGEMENT_IMG|$NEW_ENTITY_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-          echo "Updated entity management image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-
-          OLD_ENTITY_DIARY_IMG="image: ghcr.io/covergo/entity-diary:master"
-          NEW_ENTITY_DIARY_IMG="image: ghcr.io/covergo/entity-diary:${SANITIZED_BRANCH_NAME}"
-          sed -i "s|$OLD_ENTITY_DIARY_IMG|$NEW_ENTITY_DIARY_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-          sed -i "s|$OLD_ENTITY_DIARY_IMG|$NEW_ENTITY_DIARY_IMG|g" "$TESTS_ACCEPTANCE_AZURE_FILE_PATH"
-          sed -i "s|$OLD_ENTITY_DIARY_IMG|$NEW_ENTITY_DIARY_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
-          sed -i "s|$OLD_ENTITY_DIARY_IMG|$NEW_ENTITY_DIARY_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-          echo "Updated entity diary image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-
-          OLD_FINANCE_IMG="image: ghcr.io/covergo/finance:master"
-          NEW_FINANCE_IMG="image: ghcr.io/covergo/finance:${SANITIZED_BRANCH_NAME}"
-          sed -i "s|$OLD_FINANCE_IMG|$NEW_FINANCE_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-          sed -i "s|$OLD_FINANCE_IMG|$NEW_FINANCE_IMG|g" "$TESTS_ACCEPTANCE_AZURE_FILE_PATH"
-          sed -i "s|$OLD_FINANCE_IMG|$NEW_FINANCE_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
-          sed -i "s|$OLD_FINANCE_IMG|$NEW_FINANCE_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-          echo "Updated finance image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-
-          OLD_CHANNEL_MANAGEMENT_IMG="image: ghcr.io/covergo/channel-management:master"
-          NEW_CHANNEL_MANAGEMENT_IMG="image: ghcr.io/covergo/channel-management:${SANITIZED_BRANCH_NAME}"
-          sed -i "s|$OLD_CHANNEL_MANAGEMENT_IMG|$NEW_CHANNEL_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-          sed -i "s|$OLD_CHANNEL_MANAGEMENT_IMG|$NEW_CHANNEL_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_AZURE_FILE_PATH"
-          sed -i "s|$OLD_CHANNEL_MANAGEMENT_IMG|$NEW_CHANNEL_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
-          sed -i "s|$OLD_CHANNEL_MANAGEMENT_IMG|$NEW_CHANNEL_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-
-          echo "Updated channel management image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-          OLD_NOTIFICATION_CENTER_IMG="image: ghcr.io/covergo/notification-center:master"
-          NEW_NOTIFICATION_CENTER_IMG="image: ghcr.io/covergo/notification-center:${SANITIZED_BRANCH_NAME}"
-          sed -i "s|$OLD_NOTIFICATION_CENTER_IMG|$NEW_NOTIFICATION_CENTER_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-          sed -i "s|$OLD_NOTIFICATION_CENTER_IMG|$NEW_NOTIFICATION_CENTER_IMG|g" "$TESTS_ACCEPTANCE_AZURE_FILE_PATH"
-          sed -i "s|$OLD_NOTIFICATION_CENTER_IMG|$NEW_NOTIFICATION_CENTER_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
-          sed -i "s|$OLD_NOTIFICATION_CENTER_IMG|$NEW_NOTIFICATION_CENTER_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-          echo "Updated notification center image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-
-          OLD_TASK_MANAGEMENT_IMG="image: ghcr.io/covergo/task-management:master"
-          NEW_TASK_MANAGEMENT_IMG="image: ghcr.io/covergo/task-management:${SANITIZED_BRANCH_NAME}"
-          sed -i "s|$OLD_TASK_MANAGEMENT_IMG|$NEW_TASK_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-          sed -i "s|$OLD_TASK_MANAGEMENT_IMG|$NEW_TASK_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_AZURE_FILE_PATH"
-          sed -i "s|$OLD_TASK_MANAGEMENT_IMG|$NEW_TASK_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
-          sed -i "s|$OLD_TASK_MANAGEMENT_IMG|$NEW_TASK_MANAGEMENT_IMG|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
-          echo "Updated task management image in $TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
-
+          SERVICES="auth party cases claims3 filesystem policies users products pricing entity-management entity-diary finance channel-management notification-center task-management"
+          for service in $SERVICES; do
+            image_name=$(echo "$service" | tr '[:upper:]' '[:lower:]')
+            old_img="image: ghcr.io/covergo/${image_name}:master"
+            new_img="image: ghcr.io/covergo/${image_name}:${SANITIZED_BRANCH_NAME}"
+            sed -i "s|$old_img|$new_img|g" "$TESTS_ACCEPTANCE_AMAZON_FILE_PATH"
+            sed -i "s|$old_img|$new_img|g" "$TESTS_ACCEPTANCE_AZURE_FILE_PATH"
+            sed -i "s|$old_img|$new_img|g" "$TESTS_ACCEPTANCE_GOOGLE_FILE_PATH"
+            sed -i "s|$old_img|$new_img|g" "$TESTS_ACCEPTANCE_RABBITMQ_FILE_PATH"
+            echo "Updated $service image in all docker-compose test files"
+          done
           # Check if there are any changes
           if git diff --quiet; then
             echo "⚠️  No changes detected"
@@ -228,26 +132,24 @@ jobs:
           BRANCH_NAME: ${{ inputs.branch_name }}
         if: matrix.repository == 'ChinhTrieu-CoverGo/Reference'
         run: |
-          git checkout $BRANCH_NAME
-          git pull origin $BRANCH_NAME
+          git checkout "$BRANCH_NAME"
+          git pull origin "$BRANCH_NAME"
           BUILD_PUBLISH_FILE_PATH=".github/workflows/build-publish.yml"
-          SANITIZED_BRANCH_NAME=$(echo "$BRANCH_NAME" | tr '/' '-')
-          cat $BUILD_PUBLISH_FILE_PATH
 
           # Check if 'branchForTag' exists under the 'with:' section. If it does, update its value.
           # If it doesn't, add it to the 'with:' section.          
           if grep -A 20 "with:" "$BUILD_PUBLISH_FILE_PATH" | grep -q "branchForTag:"; then
             # Update existing branchForTag value
-            sed -i "s/^[[:space:]]*branchForTag:.*/branchForTag: \$SANITIZED_BRANCH_NAME/" "$BUILD_PUBLISH_FILE_PATH"
+            sed -i "s/^[[:space:]]*branchForTag:.*/branchForTag: $BRANCH_NAME/" "$BUILD_PUBLISH_FILE_PATH"
           else
             # Add branchForTag under the first 'with:' entry
             with_lineno=$(grep -n "with:" "$BUILD_PUBLISH_FILE_PATH" | head -n1 | cut -d: -f1)
             if [ -n "$with_lineno" ]; then
               # Find the indentation level after 'with:' line
               indent=$(awk "NR==$with_lineno+1" "$BUILD_PUBLISH_FILE_PATH" | grep -o '^[[:space:]]*')
-              # Insert branchForTag after 'with:' line using the value of the environment variable BRANCH_NAME
+              # Insert branchForTag after 'with:' line
               insert_lineno=$with_lineno
-              sed -i "$((insert_lineno+1))i\\${indent}branchForTag: $SANITIZED_BRANCH_NAME" "$BUILD_PUBLISH_FILE_PATH"
+              sed -i "$((insert_lineno+1))i\\${indent}branchForTag: $BRANCH_NAME/" "$BUILD_PUBLISH_FILE_PATH"
             fi
           fi         
 
