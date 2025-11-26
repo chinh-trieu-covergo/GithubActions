@@ -84,7 +84,7 @@ jobs:
           echo "✅ Successfully created/updated branch '$BRANCH_NAME' in ${{ matrix.repository }}"          
       - name: Update docker image for RequestManager repository
         env:
-          BRANCH_NAME: ${{ inputs.branch_name }}       
+          BRANCH_NAME: ${{ inputs.branch_name }}        
         run: |          
           git checkout "$BRANCH_NAME"
 
@@ -131,21 +131,20 @@ jobs:
           git checkout "$BRANCH_NAME"
           git pull origin "$BRANCH_NAME"
           BUILD_PUBLISH_FILE_PATH=".github/workflows/build-publish.yml"
-
+          SANITIZED_BRANCH_NAME=$(echo "$BRANCH_NAME" | tr '/' '-') 
           # Check if 'branchForTag' exists under the 'with:' section. If it does, update its value.
           # If it doesn't, add it to the 'with:' section.          
           if grep -A 20 "with:" "$BUILD_PUBLISH_FILE_PATH" | grep -q "branchForTag:"; then
             # Update existing branchForTag value
-            sed -i "s/^[[:space:]]*branchForTag:.*/branchForTag: $BRANCH_NAME/" "$BUILD_PUBLISH_FILE_PATH"
+            sed -i "s/^[[:space:]]*branchForTag:.*/branchForTag: $SANITIZED_BRANCH_NAME/" "$BUILD_PUBLISH_FILE_PATH"
           else
             # Add branchForTag under the first 'with:' entry
             with_lineno=$(grep -n "with:" "$BUILD_PUBLISH_FILE_PATH" | head -n1 | cut -d: -f1)
-            if [ -n "$with_lineno" ]; then
               # Find the indentation level after 'with:' line
               indent=$(awk "NR==$with_lineno+1" "$BUILD_PUBLISH_FILE_PATH" | grep -o '^[[:space:]]*')
               # Insert branchForTag after 'with:' line
               insert_lineno=$with_lineno
-              sed -i "$((insert_lineno+1))i\\${indent}branchForTag: $BRANCH_NAME/" "$BUILD_PUBLISH_FILE_PATH"
+              sed -i "$((insert_lineno+1))i\\${indent}branchForTag: $SANITIZED_BRANCH_NAME/" "$BUILD_PUBLISH_FILE_PATH"
             fi
           fi         
 
@@ -159,4 +158,17 @@ jobs:
           git commit -m "chore: update build publish to use gamma branch"
           git push origin $BRANCH_NAME
           echo "✅ Successfully committed and pushed build publish update to $BRANCH_NAME"
-
+      - name: Update build publish to use gamma branch for RequestManager repository
+        env: 
+          BRANCH_NAME: ${{ inputs.branch_name }}
+        if: matrix.repository == 'ChinhTrieu-CoverGo/RequestManager'
+        run: |
+          git checkout "$BRANCH_NAME"
+          git pull origin "$BRANCH_NAME"
+          BUILD_PUBLISH_FILE_PATH=".github/workflows/build-publish.yml"
+          SANITIZED_BRANCH_NAME=$(echo "$BRANCH_NAME" | tr '/' '-') 
+          # Replace the line 'echo ::set-output name=docker_image_ghcr_tags::${ghcr_tags}' with the new value reflecting the gamma branch
+          image_name="request-manager"
+          # Using sed to replace all such echo lines, just in case multiple exist
+          sed -i "s|echo ::set-output name=docker_image_ghcr_tags::.*|echo ::set-output name=docker_image_ghcr_tags::ghcr.io/covergo/request-manager:${SANITIZED_BRANCH_NAME}|" "$BUILD_PUBLISH_FILE_PATH"
+          
