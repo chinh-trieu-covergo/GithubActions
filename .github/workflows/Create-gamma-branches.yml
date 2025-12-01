@@ -134,18 +134,18 @@ jobs:
           SANITIZED_BRANCH_NAME=$(echo "$BRANCH_NAME" | tr '/' '-') 
           # Check if 'branchForTag' exists under the 'with:' section. If it does, update its value.
           # If it doesn't, add it to the 'with:' section.          
+          echo "
           if grep -A 20 "with:" "$BUILD_PUBLISH_FILE_PATH" | grep -q "branchForTag:"; then
-            # Update existing branchForTag value
+            echo "Update existing branchForTag value"
             sed -i "s/^[[:space:]]*branchForTag:.*/branchForTag: $SANITIZED_BRANCH_NAME/" "$BUILD_PUBLISH_FILE_PATH"
           else
-            # Add branchForTag under the first 'with:' entry
+            echo "Add branchForTag under the first 'with:' entry"
             with_lineno=$(grep -n "with:" "$BUILD_PUBLISH_FILE_PATH" | head -n1 | cut -d: -f1)
-              # Find the indentation level after 'with:' line
-              indent=$(awk "NR==$with_lineno+1" "$BUILD_PUBLISH_FILE_PATH" | grep -o '^[[:space:]]*')
-              # Insert branchForTag after 'with:' line
-              insert_lineno=$with_lineno
-              sed -i "$((insert_lineno+1))i\\${indent}branchForTag: $SANITIZED_BRANCH_NAME/" "$BUILD_PUBLISH_FILE_PATH"
-            fi
+            # Find the indentation level after 'with:' line
+            indent=$(awk "NR==$((with_lineno+1))" "$BUILD_PUBLISH_FILE_PATH" | grep -o '^[[:space:]]*')
+            # Insert branchForTag after 'with:' line
+            insert_lineno=$with_lineno
+            sed -i "$((insert_lineno+1))i\\${indent}branchForTag: $SANITIZED_BRANCH_NAME" "$BUILD_PUBLISH_FILE_PATH"
           fi         
 
           # Check if there are any changes
