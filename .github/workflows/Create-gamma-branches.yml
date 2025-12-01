@@ -145,7 +145,9 @@ jobs:
             indent=$(awk "NR==$((with_lineno+1))" "$BUILD_PUBLISH_FILE_PATH" | grep -o '^[[:space:]]*')
             # Insert branchForTag after 'with:' line
             insert_lineno=$with_lineno
-            sed -i "$((insert_lineno+1))i\\${indent}branchForTag: $SANITIZED_BRANCH_NAME" "$BUILD_PUBLISH_FILE_PATH"
+            sed -i "$((insert_lineno+1))i\\
+            ${indent}branchForTag: $SANITIZED_BRANCH_NAME
+            " "$BUILD_PUBLISH_FILE_PATH"
           fi         
 
           # Check if there are any changes
