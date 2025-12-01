@@ -133,8 +133,7 @@ jobs:
           BUILD_PUBLISH_FILE_PATH=".github/workflows/build-publish.yml"
           SANITIZED_BRANCH_NAME=$(echo "$BRANCH_NAME" | tr '/' '-') 
           # Check if 'branchForTag' exists under the 'with:' section. If it does, update its value.
-          # If it doesn't, add it to the 'with:' section.          
-          echo "
+          # If it doesn't, add it to the 'with:' section.
           if grep -A 20 "with:" "$BUILD_PUBLISH_FILE_PATH" | grep -q "branchForTag:"; then
             echo "Updated branchForTag: $SANITIZED_BRANCH_NAME after line $WITH_LINE" 
           else
