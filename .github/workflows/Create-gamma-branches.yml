@@ -141,10 +141,11 @@ jobs:
           else
             echo "Add branchForTag under the first 'with:' entry"
             with_lineno=$(grep -n "with:" "$BUILD_PUBLISH_FILE_PATH" | head -n1 | cut -d: -f1)
-            # Find the indentation level after 'with:' line
+            echo "Find the indentation level after 'with:' line"
             indent=$(awk "NR==$((with_lineno+1))" "$BUILD_PUBLISH_FILE_PATH" | grep -o '^[[:space:]]*')
-            # Insert branchForTag after 'with:' line
+            echo "Insert branchForTag after 'with:' line"
             insert_lineno=$with_lineno
+            echo "insert_lineno: $insert_lineno"            
             sed -i "$((insert_lineno+1))i\\
             ${indent}branchForTag: $SANITIZED_BRANCH_NAME
             " "$BUILD_PUBLISH_FILE_PATH"
