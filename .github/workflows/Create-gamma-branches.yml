@@ -143,18 +143,18 @@ jobs:
             with_line=$(grep -n "with:" "$BUILD_PUBLISH_FILE_PATH" | head -n 1 | cut -d: -f1)
             if [ -n "$with_line" ]; then
               next_line=$((with_line + 1))
-              # Determine indentation (number of spaces before 'with:')
+              echo "Determine indentation (number of spaces before 'with:')"
               indent=$(awk "NR==$with_line{ match(\$0, /^([ ]*)with:/, arr); print length(arr[1]) }" "$BUILD_PUBLISH_FILE_PATH")
-              # Compose the branchForTag string with correct indentation
+              echo "Compose the branchForTag string with correct indentation"
               branch_for_tag_line="$(printf '%*s' $((indent + 2)) '')branchForTag: $SANITIZED_BRANCH_NAME"
-              # Insert branchForTag line right after 'with:'
+              echo "Insert branchForTag line right after 'with:'"
               awk -v n=$next_line -v s="$branch_for_tag_line" 'NR==n{print s}1' "$BUILD_PUBLISH_FILE_PATH" > "$BUILD_PUBLISH_FILE_PATH.tmp" && mv "$BUILD_PUBLISH_FILE_PATH.tmp" "$BUILD_PUBLISH_FILE_PATH"
               echo "Added branchForTag to first 'with:' in $BUILD_PUBLISH_FILE_PATH"
             else
               echo "Could not find 'with:' in $BUILD_PUBLISH_FILE_PATH"
               exit 1
             fi
-          fi         
+          fi
 
           # Check if there are any changes
           if git diff --quiet; then
