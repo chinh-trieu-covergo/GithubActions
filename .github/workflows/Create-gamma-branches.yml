@@ -136,8 +136,7 @@ jobs:
           # If it doesn't, add it to the 'with:' section.          
           echo "
           if grep -A 20 "with:" "$BUILD_PUBLISH_FILE_PATH" | grep -q "branchForTag:"; then
-            echo "Update existing branchForTag value"
-            sed -i "s/^[[:space:]]*branchForTag:.*/branchForTag: $SANITIZED_BRANCH_NAME/" "$BUILD_PUBLISH_FILE_PATH"
+            echo "Updated branchForTag: $SANITIZED_BRANCH_NAME after line $WITH_LINE" 
           else
             echo "Inserted branchForTag: $SANITIZED_BRANCH_NAME after line $WITH_LINE"
           fi
