@@ -137,7 +137,16 @@ jobs:
           if grep -A 20 "with:" "$BUILD_PUBLISH_FILE_PATH" | grep -q "branchForTag:"; then
             echo "Updated branchForTag: $SANITIZED_BRANCH_NAME after line $WITH_LINE" 
           else
-            echo "Inserted branchForTag: $SANITIZED_BRANCH_NAME after line $WITH_LINE"
+            # Insert branchForTag under the first 'with:' block (typically after 8 lines, which should be right after 'with:')
+            # Find the line number for the 'with:' block
+            WITH_LINE=$(grep -n -m 1 "with:" "$BUILD_PUBLISH_FILE_PATH" | cut -d: -f1)
+            if [ -z "$WITH_LINE" ]; then
+              echo "Could not find 'with:' block in $BUILD_PUBLISH_FILE_PATH"
+              exit 1
+            fi
+            # Insert the new key immediately after the with: line (line number +1)
+            sed -i "$((WITH_LINE+1))i\ \ \ \ \ \ branchForTag: $SANITIZED_BRANCH_NAME" "$BUILD_PUBLISH_FILE_PATH"
+            echo "Inserted branchForTag: $SANITIZED_BRANCH_NAME after line no $((WITH_LINE+1))"
           fi
 
           # Check if there are any changes
