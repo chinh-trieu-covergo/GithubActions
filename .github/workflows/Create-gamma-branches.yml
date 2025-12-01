@@ -173,3 +173,13 @@ jobs:
           # Using sed to replace all such echo lines, just in case multiple exist
           sed -i "s|echo ::set-output name=docker_image_ghcr_tags::.*|echo ::set-output name=docker_image_ghcr_tags::ghcr.io/covergo/request-manager:${SANITIZED_BRANCH_NAME}|" "$BUILD_PUBLISH_FILE_PATH"
           
+          # Check if there are any changes
+          if git diff --quiet; then
+            echo "⚠️  No changes detected"
+            exit 0
+          fi
+
+          git add .
+          git commit -m "chore: update build publish to use gamma branch"
+          git push origin $BRANCH_NAME
+          echo "✅ Successfully committed and pushed build publish update to $BRANCH_NAME"
