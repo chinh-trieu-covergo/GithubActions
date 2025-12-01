@@ -139,17 +139,7 @@ jobs:
             echo "Update existing branchForTag value"
             sed -i "s/^[[:space:]]*branchForTag:.*/branchForTag: $SANITIZED_BRANCH_NAME/" "$BUILD_PUBLISH_FILE_PATH"
           else
-            # Insert branchForTag under the first 'with:' key (indent 8 spaces)
-            # Get the line number of the first 'with:' occurrence
-            WITH_LINE=$(grep -n '^[[:space:]]*with:' "$BUILD_PUBLISH_FILE_PATH" | head -n1 | cut -d: -f1)
-            if [ -n "$WITH_LINE" ]; then
-              # Insert branchForTag at line number WITH_LINE + 1 (i.e., immediately below 'with:')
-              sed -i "$((WITH_LINE + 1))i\        branchForTag: $SANITIZED_BRANCH_NAME" "$BUILD_PUBLISH_FILE_PATH"
-              echo "Inserted branchForTag: $SANITIZED_BRANCH_NAME after line $WITH_LINE"
-            else
-              echo "Could not find any 'with:' section to insert branchForTag in $BUILD_PUBLISH_FILE_PATH"
-              exit 1
-            fi
+            echo "Inserted branchForTag: $SANITIZED_BRANCH_NAME after line $WITH_LINE"
           fi
 
           # Check if there are any changes
