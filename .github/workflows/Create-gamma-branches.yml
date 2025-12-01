@@ -16,8 +16,8 @@ jobs:
     strategy:
       matrix:
         repository:
-          - ChinhTrieu-CoverGo/Reference
-          - ChinhTrieu-CoverGo/RequestManager
+          - chinh-trieu-covergo/Reference
+          - chinh-trieu-covergo/RequestManager
           # Add more repositories here as needed
           # - CoverGo/Gateway
           # - CoverGo/AnotherRepository
@@ -126,7 +126,7 @@ jobs:
       - name: Update build publish to use gamma branch for Reference repository
         env: 
           BRANCH_NAME: ${{ inputs.branch_name }}
-        if: matrix.repository == 'CoverGo/Reference'
+        if: matrix.repository == 'chinh-trieu-covergo/Reference'
         run: |
           git checkout "$BRANCH_NAME"
           git pull origin "$BRANCH_NAME"
@@ -161,7 +161,7 @@ jobs:
       - name: Update build publish to use gamma branch for RequestManager repository
         env: 
           BRANCH_NAME: ${{ inputs.branch_name }}
-        if: matrix.repository == 'ChinhTrieu-CoverGo/RequestManager'
+        if: matrix.repository == 'chinh-trieu-covergo/RequestManager'
         run: |
           git checkout "$BRANCH_NAME"
           git pull origin "$BRANCH_NAME"
@@ -171,15 +171,4 @@ jobs:
           image_name="request-manager"
           # Using sed to replace all such echo lines, just in case multiple exist
           sed -i "s|echo ::set-output name=docker_image_ghcr_tags::.*|echo ::set-output name=docker_image_ghcr_tags::ghcr.io/covergo/request-manager:${SANITIZED_BRANCH_NAME}|" "$BUILD_PUBLISH_FILE_PATH"
-
-          # Check if there are any changes
-          if git diff --quiet; then
-            echo "⚠️  No changes detected"
-            exit 0
-          fi
-
-          git add .
-          git commit -m "chore: update build publish to use gamma branch"
-          git push origin $BRANCH_NAME
-          echo "✅ Successfully committed and pushed build publish update to $BRANCH_NAME"
           
