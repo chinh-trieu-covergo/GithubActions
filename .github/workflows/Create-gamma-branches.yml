@@ -32,10 +32,10 @@ jobs:
           - CoverGo/Reference
           - CoverGo/RequestManager
         exclude:
-          - ${{inputs.reference-repository}}: false
-            repository: CoverGo/Reference
-          - ${{inputs.requestmanager-repository}}: false
-            repository: CoverGo/RequestManager
+          - repository: CoverGo/Reference
+            reference-repository: false
+          - repository: CoverGo/RequestManager
+            requestmanager-repository: false
     steps:
       - name: Validate branch name
         env:
