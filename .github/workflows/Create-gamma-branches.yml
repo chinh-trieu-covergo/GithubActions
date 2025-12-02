@@ -3,6 +3,43 @@ name: Create gamma branches in multiple CoverGo repositories
 on:
   workflow_dispatch:
     inputs:
+      repositories:
+          description: 'Repositories for which to create the gamma branch (choose one or more)'
+          required: true
+          type: choice
+          options:
+            - Achievements
+            - Advisor
+            - api-gateway
+            - Auth
+            - Cases
+            - ChannelManagement
+            - ClaimInvestigation
+            - Claims
+            - Claims3
+            - Education
+            - EntityDiary
+            - EntityManagement
+            - FileSystem
+            - Finance
+            - Gateway
+            - graphql-migration-tool
+            - L10n
+            - Notifications
+            - Party
+            - Policies
+            - Premium
+            - Pricing
+            - ProductBuilder
+            - Products
+            - quotation
+            - Reference
+            - RequestManager
+            - Scheduler
+            - Scripts-js
+            - Templates
+            - Transactions
+            - Users
       branch_name:
         description: 'Branch name to create'
         required: true
@@ -16,12 +53,7 @@ jobs:
     strategy:
       matrix:
         repository:
-          - chinh-trieu-covergo/Reference
-          - chinh-trieu-covergo/RequestManager
-          # Add more repositories here as needed
-          # - CoverGo/Gateway
-          # - CoverGo/AnotherRepository
-          # - ...
+          - chinh-trieu-covergo/${{ inputs.repositories }}
     steps:
       - name: Validate branch name
         env:
