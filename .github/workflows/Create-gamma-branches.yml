@@ -3,48 +3,24 @@ name: Create gamma branches in multiple CoverGo repositories
 on:
   workflow_dispatch:
     inputs:
-      repositories:
-          description: 'Repositories for which to create the gamma branch (choose one or more)'
-          required: true
-          type: choice
-          options:
-            - Achievements
-            - Advisor
-            - api-gateway
-            - Auth
-            - Cases
-            - ChannelManagement
-            - ClaimInvestigation
-            - Claims
-            - Claims3
-            - Education
-            - EntityDiary
-            - EntityManagement
-            - FileSystem
-            - Finance
-            - Gateway
-            - graphql-migration-tool
-            - L10n
-            - Notifications
-            - Party
-            - Policies
-            - Premium
-            - Pricing
-            - ProductBuilder
-            - Products
-            - quotation
-            - Reference
-            - RequestManager
-            - Scheduler
-            - Scripts-js
-            - Templates
-            - Transactions
-            - Users
+      reference-repository:
+        description: 'Create gamma branches for Reference repository'
+        required: true
+        type: choice
+        options:
+          - Yes
+          - No    
+      requestmanager-repository:
+        description: 'Create gamma branches for RequestManager repository'
+        required: true
+        type: choice
+        options:
+          - Yes
+          - No    
       branch_name:
         description: 'Branch name to create'
         required: true
         type: string
-
 jobs:
   create-branch:
     runs-on: ubuntu-latest
@@ -53,7 +29,13 @@ jobs:
     strategy:
       matrix:
         repository:
-          - chinh-trieu-covergo/${{ inputs.repositories }}
+          - CoverGo/Reference
+          - CoverGo/RequestManager
+        exclude:
+          - reference-repository: No
+            repository: CoverGo/Reference
+          - requestmanager-repository: No
+            repository: CoverGo/RequestManager
     steps:
       - name: Validate branch name
         env:
