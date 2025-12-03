@@ -495,7 +495,7 @@ jobs:
               exit 1
             fi
             # Insert the new key immediately after the with: line (line number +1)
-            sed -i "$((WITH_LINE+1))i\ \ \ \ \ \ branchForTag: $BRANCH_NAME" "$BUILD_PUBLISH_FILE_PATH"
+            sed -i "$((WITH_LINE+1))i\ \ \ \ \ \ branchForTag: "$BRANCH_NAME" "$BUILD_PUBLISH_FILE_PATH"
             echo "Inserted branchForTag: $BRANCH_NAME after line no $((WITH_LINE+1))"
           fi
 
