@@ -24,10 +24,7 @@ jobs:
       matrix:
         repository:
           - CoverGo/Reference
-          - CoverGo/RequestManager
-        exclude:
-          - repository: CoverGo/Reference            
-          - repository: CoverGo/RequestManager            
+          - CoverGo/RequestManager                
     steps:
       - name: Validate branch name
         env:
@@ -49,8 +46,23 @@ jobs:
         env:
           BRANCH_NAME: ${{ inputs.branch_name }}
         run: |
+          
           git config user.name "coverbot"
           git config user.email "infrastructure@covergo.com"
+          if [ "${{ inputs.reference-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Reference" ]; then
+            echo "Creating gamma branch for Reference repository"
+          else
+            echo "Skipping gamma branch for Reference repository"
+            exit 0
+          fi
+
+          if [ "${{ inputs.requestmanager-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/RequestManager" ]; then
+            echo "Creating gamma branch for RequestManager repository"
+          else
+            echo "Skipping gamma branch for RequestManager repository"
+            exit 0
+          fi
+
           
           # Get the default branch (main or master)
           # Try to get the default branch from remote HEAD
@@ -89,6 +101,7 @@ jobs:
           
           echo "✅ Successfully created/updated branch '$BRANCH_NAME' in ${{ matrix.repository }}"          
       - name: Update docker image for RequestManager repository
+        if: matrix.repository == 'chinh-trieu-covergo/RequestManager' && input.requestmanager-repository == true
         env:
           BRANCH_NAME: ${{ inputs.branch_name }}        
         run: |          
@@ -132,7 +145,7 @@ jobs:
       - name: Update build publish to use gamma branch for Reference repository
         env: 
           BRANCH_NAME: ${{ inputs.branch_name }}
-        if: matrix.repository == 'chinh-trieu-covergo/Reference'
+        if: matrix.repository == 'chinh-trieu-covergo/Reference' && input.reference-repository == true
         run: |
           git checkout "$BRANCH_NAME"
           git pull origin "$BRANCH_NAME"
@@ -168,7 +181,7 @@ jobs:
       - name: Update build publish to use gamma branch for RequestManager repository
         env: 
           BRANCH_NAME: ${{ inputs.branch_name }}
-        if: matrix.repository == 'chinh-trieu-covergo/RequestManager'
+        if: matrix.repository == 'chinh-trieu-covergo/RequestManager' && input.request-manager == true
         run: |
           git checkout "$BRANCH_NAME"
           git pull origin "$BRANCH_NAME"
