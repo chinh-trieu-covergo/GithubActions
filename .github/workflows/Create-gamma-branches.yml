@@ -4,19 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       reference-repository:
-        description: 'Create gamma branches for Reference repository'
-        required: true
-        type: choice
-        options:
-          - Yes
-          - No    
+        description: 'Create gamma branches for Reference repository'              
+        type: boolean           
       requestmanager-repository:
-        description: 'Create gamma branches for RequestManager repository'
-        required: true
-        type: choice
-        options:
-          - Yes
-          - No    
+        description: 'Create gamma branches for RequestManager repository'        
+        type: boolean           
       branch_name:
         description: 'Branch name to create'
         required: true
@@ -33,9 +25,9 @@ jobs:
           - CoverGo/RequestManager
         exclude:
           - repository: CoverGo/Reference
-            ${{inputs.reference-repository}}: No
+            ${{inputs.reference-repository}}: true
           - repository: CoverGo/RequestManager
-            ${{inputs.requestmanager-repository}}: No
+            ${{inputs.requestmanager-repository}}: true
     steps:
       - name: Validate branch name
         env:
