@@ -5,10 +5,12 @@ on:
     inputs:
       reference-repository:
         description: 'Create gamma branches for Reference repository'              
-        type: boolean           
+        type: boolean
+        default: true
       requestmanager-repository:
         description: 'Create gamma branches for RequestManager repository'        
-        type: boolean           
+        type: boolean
+        default: true
       branch_name:
         description: 'Branch name to create'
         required: true
@@ -24,10 +26,8 @@ jobs:
           - CoverGo/Reference
           - CoverGo/RequestManager
         exclude:
-          - repository: CoverGo/Reference
-            ${{inputs.reference-repository}}: true
-          - repository: CoverGo/RequestManager
-            ${{inputs.requestmanager-repository}}: true
+          - repository: CoverGo/Reference            
+          - repository: CoverGo/RequestManager            
     steps:
       - name: Validate branch name
         env:
