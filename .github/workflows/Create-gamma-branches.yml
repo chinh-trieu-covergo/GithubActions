@@ -3,98 +3,98 @@ name: Create gamma branches in multiple CoverGo repositories
 on:
   workflow_dispatch:
     inputs:
-      achivements-repository:
-        description: 'Create gamma branches for Achievements repository'        
-        type: boolean
-        default: true
-      advisor-repository:
-        description: 'Create gamma branches for Advisor repository'        
-        type: boolean
-        default: true
-      api-gateway-repository:
-        description: 'Create gamma branches for api-gateway repository'        
-        type: boolean
-        default: true
-      auth-repository:
-        description: 'Create gamma branches for Auth repository'        
-        type: boolean
-        default: true
-      cases-repository:
-        description: 'Create gamma branches for Cases repository'        
-        type: boolean
-        default: true
-      channel-management-repository:
-        description: 'Create gamma branches for ChannelManagement repository'        
-        type: boolean
-        default: true
-      claim-investigation-repository:
-        description: 'Create gamma branches for ClaimInvestigation repository'        
-        type: boolean
-        default: true
-      claims-repository:
-        description: 'Create gamma branches for Claims repository'        
-        type: boolean
-        default: true
-      claims3-repository:
-        description: 'Create gamma branches for Claims3 repository'        
-        type: boolean
-        default: true
-      education-repository:
-        description: 'Create gamma branches for Education repository'        
-        type: boolean
-        default: true
-      entity-diary-repository:
-        description: 'Create gamma branches for EntityDiary repository'        
-        type: boolean
-        default: true
-      entity-management-repository:
-        description: 'Create gamma branches for EntityManagement repository'        
-        type: boolean
-        default: true
-      filesystem-repository:
-        description: 'Create gamma branches for FileSystem repository'        
-        type: boolean
-        default: true
-      finance-repository:
-        description: 'Create gamma branches for Finance repository'        
-        type: boolean
-        default: true
-      gateway-repository:
-        description: 'Create gamma branches for Gateway repository'        
-        type: boolean
-        default: true
-      graphql-migration-tool-repository:
-        description: 'Create gamma branches for graphql-migration-tool repository'        
-        type: boolean
-        default: true
-      l10n-repository:
-        description: 'Create gamma branches for L10n repository'        
-        type: boolean
-        default: true
-      notifications-repository:
-        description: 'Create gamma branches for Notifications repository'        
-        type: boolean
-        default: true
-      party-repository:
-        description: 'Create gamma branches for Party repository'        
-        type: boolean
-        default: true
-      policies-repository:
-        description: 'Create gamma branches for Policies repository'        
-        type: boolean
-        default: true
-      premium-repository:
-        description: 'Create gamma branches for Premium repository'        
-        type: boolean
-        default: true
-      pricing-repository:
-        description: 'Create gamma branches for Pricing repository'        
-        type: boolean
-        default: true
-      productbuilder-repository:
-        description: 'Create gamma branches for ProductBuilder repository'        
-        type: boolean
-        default: true
+      #achivements-repository:
+      #	description: 'Create gamma branches for Achievements repository'        
+      #	type: boolean
+      #	default: true
+      #advisor-repository:
+      #	description: 'Create gamma branches for Advisor repository'        
+      #	type: boolean
+      #	default: true
+      #api-gateway-repository:
+      #	description: 'Create gamma branches for api-gateway repository'        
+      #	type: boolean
+      #	default: true
+      #auth-repository:
+      #	description: 'Create gamma branches for Auth repository'        
+      #	type: boolean
+      #	default: true
+      #cases-repository:
+      #	description: 'Create gamma branches for Cases repository'        
+      #	type: boolean
+      #	default: true
+      #channel-management-repository:
+      #	description: 'Create gamma branches for ChannelManagement repository'        
+      #	type: boolean
+      #	default: true
+      #claim-investigation-repository:
+      #	description: 'Create gamma branches for ClaimInvestigation repository'        
+      #	type: boolean
+      #	default: true
+      #claims-repository:
+      #	description: 'Create gamma branches for Claims repository'        
+      #	type: boolean
+      #	default: true
+      #claims3-repository:
+      #	description: 'Create gamma branches for Claims3 repository'        
+      #	type: boolean
+      #	default: true
+      #education-repository:
+      #	description: 'Create gamma branches for Education repository'        
+      #	type: boolean
+      #	default: true
+      #entity-diary-repository:
+      #	description: 'Create gamma branches for EntityDiary repository'        
+      #	type: boolean
+      #	default: true
+      #entity-management-repository:
+      #	description: 'Create gamma branches for EntityManagement repository'        
+      #	type: boolean
+      #	default: true
+      #filesystem-repository:
+      #	description: 'Create gamma branches for FileSystem repository'        
+      #	type: boolean
+      #	default: true
+      #finance-repository:
+      #	description: 'Create gamma branches for Finance repository'        
+      #	type: boolean
+      #	default: true
+      #gateway-repository:
+      #	description: 'Create gamma branches for Gateway repository'        
+      #	type: boolean
+      #	default: true
+      #graphql-migration-tool-repository:
+      #	description: 'Create gamma branches for graphql-migration-tool repository'        
+      #	type: boolean
+      #	default: true
+      #l10n-repository:
+      #	description: 'Create gamma branches for L10n repository'        
+      #	type: boolean
+      #	default: true
+      #notifications-repository:
+      #	description: 'Create gamma branches for Notifications repository'        
+      #	type: boolean
+      #	default: true
+      #party-repository:
+      #	description: 'Create gamma branches for Party repository'        
+      #	type: boolean
+      #	default: true
+      #policies-repository:
+      #	description: 'Create gamma branches for Policies repository'        
+      #	type: boolean
+      #	default: true
+      #premium-repository:
+      #	description: 'Create gamma branches for Premium repository'        
+      #	type: boolean
+      #	default: true
+      #pricing-repository:
+      #	description: 'Create gamma branches for Pricing repository'        
+      #	type: boolean
+      #	default: true
+      #productbuilder-repository:
+      #	description: 'Create gamma branches for ProductBuilder repository'        
+      #	type: boolean
+      #	default: true
       products-repository:
         description: 'Create gamma branches for Products repository'        
         type: boolean
