@@ -192,18 +192,22 @@ jobs:
             echo "Inserted branchForTag: $BRANCH_NAME after line no $((WITH_LINE+1))"
           fi
 
-          # Check if 'skipTest exists under the 'with:' section and below branchForTag. If it does, update its value.
+           # Check if 'skipTest exists under the 'with:' section and below branchForTag. If it does, update its value.
           # If it doesn't, add it to the 'with:' section.
           if grep -A 20 "with:" "$BUILD_PUBLISH_FILE_PATH" | grep -q "skipTest:"; then
             # Update existing skipTest value
             sed -i "s/^[[:space:]]*skipTest:.*/skipTest: true/" "$BUILD_PUBLISH_FILE_PATH"
           else
-            # Insert skipTest under the first 'with:' block (typically after 8 lines, which should be right after 'with:')
-            # Find the line number for the 'with:' block
+            # Insert skipTest under the first 'with:' block (right after the first occurrence of 'with:')
             WITH_LINE=$(grep -n -m 1 "with:" "$BUILD_PUBLISH_FILE_PATH" | cut -d: -f1)
+            if [ -z "$WITH_LINE" ]; then
+              echo "Could not find 'with:' block in $BUILD_PUBLISH_FILE_PATH"
+              exit 1
+            fi
+            # Insert the new key immediately after the with: line (line number +1)
+            sed -i "$((WITH_LINE+1))i\ \ \ \ \ \ skipTest: true" "$BUILD_PUBLISH_FILE_PATH"
+            echo "Inserted skipTest: true after line no $((WITH_LINE+1))"
           fi
-
-
           
           # Check if there are any changes
           if git diff --quiet; then
