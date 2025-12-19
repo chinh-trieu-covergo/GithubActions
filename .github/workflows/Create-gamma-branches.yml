@@ -32,7 +32,7 @@ jobs:
           - chinh-trieu-covergo/ProductBuilder
           - chinh-trieu-covergo/Templates
           - chinh-trieu-covergo/Transactions
-          - chinh-trieu-covergo/Users,
+          - chinh-trieu-covergo/Users
           - chinh-trieu-covergo/Scheduler
           - chinh-trieu-covergo/Scripts-js
           - chinh-trieu-covergo/Achievements
