@@ -3,138 +3,11 @@ name: Create gamma branches in multiple CoverGo repositories
 on:
   workflow_dispatch:
     inputs:
-      #achivements-repository:
-      #	description: 'Create gamma branches for Achievements repository'        
-      #	type: boolean
-      #	default: true
-      #advisor-repository:
-      #	description: 'Create gamma branches for Advisor repository'        
-      #	type: boolean
-      #	default: true
-      #api-gateway-repository:
-      #	description: 'Create gamma branches for api-gateway repository'        
-      #	type: boolean
-      #	default: true
-      #auth-repository:
-      #	description: 'Create gamma branches for Auth repository'        
-      #	type: boolean
-      #	default: true
-      #cases-repository:
-      #	description: 'Create gamma branches for Cases repository'        
-      #	type: boolean
-      #	default: true
-      #channel-management-repository:
-      #	description: 'Create gamma branches for ChannelManagement repository'        
-      #	type: boolean
-      #	default: true
-      #claim-investigation-repository:
-      #	description: 'Create gamma branches for ClaimInvestigation repository'        
-      #	type: boolean
-      #	default: true
-      #claims-repository:
-      #	description: 'Create gamma branches for Claims repository'        
-      #	type: boolean
-      #	default: true
-      #claims3-repository:
-      #	description: 'Create gamma branches for Claims3 repository'        
-      #	type: boolean
-      #	default: true
-      #education-repository:
-      #	description: 'Create gamma branches for Education repository'        
-      #	type: boolean
-      #	default: true
-      #entity-diary-repository:
-      #	description: 'Create gamma branches for EntityDiary repository'        
-      #	type: boolean
-      #	default: true
-      #entity-management-repository:
-      #	description: 'Create gamma branches for EntityManagement repository'        
-      #	type: boolean
-      #	default: true
-      #filesystem-repository:
-      #	description: 'Create gamma branches for FileSystem repository'        
-      #	type: boolean
-      #	default: true
-      #finance-repository:
-      #	description: 'Create gamma branches for Finance repository'        
-      #	type: boolean
-      #	default: true
-      #gateway-repository:
-      #	description: 'Create gamma branches for Gateway repository'        
-      #	type: boolean
-      #	default: true
-      #graphql-migration-tool-repository:
-      #	description: 'Create gamma branches for graphql-migration-tool repository'        
-      #	type: boolean
-      #	default: true
-      #l10n-repository:
-      #	description: 'Create gamma branches for L10n repository'        
-      #	type: boolean
-      #	default: true
-      #notifications-repository:
-      #	description: 'Create gamma branches for Notifications repository'        
-      #	type: boolean
-      #	default: true
-      #party-repository:
-      #	description: 'Create gamma branches for Party repository'        
-      #	type: boolean
-      #	default: true
-      #policies-repository:
-      #	description: 'Create gamma branches for Policies repository'        
-      #	type: boolean
-      #	default: true
-      #premium-repository:
-      #	description: 'Create gamma branches for Premium repository'        
-      #	type: boolean
-      #	default: true
-      #pricing-repository:
-      #	description: 'Create gamma branches for Pricing repository'        
-      #	type: boolean
-      #	default: true
-      #productbuilder-repository:
-      #	description: 'Create gamma branches for ProductBuilder repository'        
-      #	type: boolean
-      #	default: true
-      products-repository:
-        description: 'Create gamma branches for Products repository'        
-        type: boolean
-        default: true
-      quotation-repository:
-        description: 'Create gamma branches for quotation repository'        
-        type: boolean
-        default: true
-      reference-repository:
-        description: 'Create gamma branches for Reference repository'        
-        type: boolean
-        default: true
-      requestmanager-repository:
-        description: 'Create gamma branches for RequestManager repository'        
-        type: boolean
-        default: true
-      scheduler-repository:
-        description: 'Create gamma branches for Scheduler repository'        
-        type: boolean
-        default: true
-      scripts-js-repository:
-        description: 'Create gamma branches for Scripts-js repository'        
-        type: boolean
-        default: true
-      templates-repository:
-        description: 'Create gamma branches for Templates repository'        
-        type: boolean
-        default: true
-      transactions-repository:
-        description: 'Create gamma branches for Transactions repository'        
-        type: boolean
-        default: true
-      users-repository:
-        description: 'Create gamma branches for Users repository'        
-        type: boolean
-        default: true      
       branch_name:
         description: 'Branch name to create'
         required: true
         type: string
+
 jobs:
   create-branch:
     runs-on: ubuntu-latest
@@ -143,38 +16,35 @@ jobs:
     strategy:
       matrix:
         repository:
-          - chinh-trieu-covergo/Achievements
-          - chinh-trieu-covergo/Advisor
-          - chinh-trieu-covergo/api-gateway
-          - chinh-trieu-covergo/Auth
-          - chinh-trieu-covergo/Cases
-          - chinh-trieu-covergo/ChannelManagement
-          - chinh-trieu-covergo/ClaimInvestigation
-          - chinh-trieu-covergo/Claims
-          - chinh-trieu-covergo/Claims3
-          - chinh-trieu-covergo/Education
-          - chinh-trieu-covergo/EntityDiary
-          - chinh-trieu-covergo/EntityManagement
-          - chinh-trieu-covergo/FileSystem
-          - chinh-trieu-covergo/Finance
-          - chinh-trieu-covergo/Gateway
-          - chinh-trieu-covergo/graphql-migration-tool
-          - chinh-trieu-covergo/L10n
-          - chinh-trieu-covergo/Notifications
-          - chinh-trieu-covergo/Party
-          - chinh-trieu-covergo/Policies
-          - chinh-trieu-covergo/Premium
-          - chinh-trieu-covergo/Pricing
-          - chinh-trieu-covergo/ProductBuilder
-          - chinh-trieu-covergo/Products
-          - chinh-trieu-covergo/quotation
           - chinh-trieu-covergo/Reference
           - chinh-trieu-covergo/RequestManager
-          - chinh-trieu-covergo/Scheduler
-          - chinh-trieu-covergo/Scripts-js
-          - chinh-trieu-covergo/Templates
-          - chinh-trieu-covergo/Transactions
-          - chinh-trieu-covergo/Users                
+          - chinh-trieu-covergo/quotation,
+          - chinh-trieu-covergo/Products,
+          - chinh-trieu-covergo/Premium,
+          - chinh-trieu-covergo/Pricing,
+          - chinh-trieu-covergo/Policies,
+          - chinh-trieu-covergo/Notifications,
+          - chinh-trieu-covergo/FileSystem,
+          - chinh-trieu-covergo/Education,
+          - chinh-trieu-covergo/EntityDiary,
+          - chinh-trieu-covergo/EntityManagement,
+          - chinh-trieu-covergo/Finance,
+          - chinh-trieu-covergo/ProductBuilder,
+          - chinh-trieu-covergo/Templates,
+          - chinh-trieu-covergo/Transactions,
+          - chinh-trieu-covergo/Users,
+          - chinh-trieu-covergo/Scheduler,
+          - chinh-trieu-covergo/Scripts-js,
+          - chinh-trieu-covergo/Achievements,
+          - chinh-trieu-covergo/api-gateway,
+          - chinh-trieu-covergo/Auth,
+          - chinh-trieu-covergo/Cases,
+          - chinh-trieu-covergo/ClaimInvestigation,
+          - chinh-trieu-covergo/Claims,
+          - chinh-trieu-covergo/ChannelManagement,
+          - chinh-trieu-covergo/Claim3,
+          
+          
     steps:
       - name: Validate branch name
         env:
@@ -196,203 +66,6 @@ jobs:
         env:
           BRANCH_NAME: ${{ inputs.branch_name }}
         run: |
-
-          if [ "${{ inputs.achivements-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Achievements" ]; then
-            echo "Creating gamma branch for Achievements repository"
-          else
-            echo "Skipping gamma branch for Achievements repository"
-            exit 0
-          fi
-
-          if [ "${{ inputs.advisor-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Advisor" ]; then
-            echo "Creating gamma branch for Advisor repository"
-          else
-            echo "Skipping gamma branch for Advisor repository"
-            exit 0
-          fi
-
-          if [ "${{ inputs.api-gateway-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/api-gateway" ]; then
-            echo "Creating gamma branch for api-gateway repository"
-          else
-            echo "Skipping gamma branch for api-gateway repository"
-            exit 0
-          fi
-
-          if [ "${{ inputs.auth-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Auth" ]; then
-            echo "Creating gamma branch for Auth repository"
-          else
-            echo "Skipping gamma branch for Auth repository"
-            exit 0
-          fi
-          if [ "${{ inputs.cases-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Cases" ]; then
-            echo "Creating gamma branch for Cases repository"
-          else
-            echo "Skipping gamma branch for Cases repository"
-            exit 0
-          fi
-          if [ "${{ inputs.channel-management-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/ChannelManagement" ]; then
-            echo "Creating gamma branch for ChannelManagement repository"
-          else
-            echo "Skipping gamma branch for ChannelManagement repository"
-            exit 0
-          fi
-          if [ "${{ inputs.claim-investigation-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/ClaimInvestigation" ]; then
-            echo "Creating gamma branch for ClaimInvestigation repository"
-          else
-            echo "Skipping gamma branch for ClaimInvestigation repository"
-            exit 0
-          fi
-          if [ "${{ inputs.claims-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Claims" ]; then
-            echo "Creating gamma branch for Claims repository"
-          else
-            echo "Skipping gamma branch for Claims repository"
-            exit 0
-          fi
-          if [ "${{ inputs.claims3-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Claims3" ]; then
-            echo "Creating gamma branch for Claims3 repository"
-          else
-            echo "Skipping gamma branch for Claims3 repository"
-            exit 0
-          fi
-          if [ "${{ inputs.education-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Education" ]; then
-            echo "Creating gamma branch for Education repository"
-          else
-            echo "Skipping gamma branch for Education repository"
-            exit 0
-          fi
-          if [ "${{ inputs.entity-diary-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/EntityDiary" ]; then
-            echo "Creating gamma branch for EntityDiary repository"
-          else
-            echo "Skipping gamma branch for EntityDiary repository"
-            exit 0
-          fi
-          if [ "${{ inputs.entity-management-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/EntityManagement" ]; then
-            echo "Creating gamma branch for EntityManagement repository"
-          else
-            echo "Skipping gamma branch for EntityManagement repository"
-            exit 0
-          fi
-          if [ "${{ inputs.filesystem-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/FileSystem" ]; then
-            echo "Creating gamma branch for FileSystem repository"
-          else
-            echo "Skipping gamma branch for FileSystem repository"
-            exit 0
-          fi
-          if [ "${{ inputs.finance-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Finance" ]; then
-            echo "Creating gamma branch for Finance repository"
-          else  
-            echo "Skipping gamma branch for Finance repository"
-            exit 0
-          fi
-          if [ "${{ inputs.gateway-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Gateway" ]; then
-            echo "Creating gamma branch for Gateway repository"
-          else
-            echo "Skipping gamma branch for Gateway repository"
-            exit 0
-          fi
-          if [ "${{ inputs.graphql-migration-tool-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/graphql-migration-tool" ]; then
-            echo "Creating gamma branch for graphql-migration-tool repository"
-          else
-            echo "Skipping gamma branch for graphql-migration-tool repository"
-            exit 0
-          fi
-          if [ "${{ inputs.l10n-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/L10n" ]; then
-            echo "Creating gamma branch for L10n repository"
-          else
-            echo "Skipping gamma branch for L10n repository"
-            exit 0
-          fi
-          if [ "${{ inputs.notifications-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Notifications" ]; then
-            echo "Creating gamma branch for Notifications repository"
-          else
-            echo "Skipping gamma branch for Notifications repository"
-            exit 0
-          fi
-          if [ "${{ inputs.party-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Party" ]; then
-            echo "Creating gamma branch for Party repository"
-          else
-            echo "Skipping gamma branch for Party repository"
-            exit 0
-          fi
-          if [ "${{ inputs.policies-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Policies" ]; then
-            echo "Creating gamma branch for Policies repository"
-          else
-            echo "Skipping gamma branch for Policies repository"
-            exit 0
-          fi
-          if [ "${{ inputs.premium-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Premium" ]; then
-            echo "Creating gamma branch for Premium repository"
-          else
-            echo "Skipping gamma branch for Premium repository"
-            exit 0
-          fi
-          if [ "${{ inputs.pricing-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Pricing" ]; then
-            echo "Creating gamma branch for Pricing repository"
-          else
-            echo "Skipping gamma branch for Pricing repository"
-            exit 0
-          fi
-          if [ "${{ inputs.productbuilder-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/ProductBuilder" ]; then
-            echo "Creating gamma branch for ProductBuilder repository"
-          else
-            echo "Skipping gamma branch for ProductBuilder repository"
-            exit 0
-          fi
-          if [ "${{ inputs.products-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Products" ]; then
-            echo "Creating gamma branch for Products repository"
-          else
-            echo "Skipping gamma branch for Products repository"
-            exit 0
-          fi
-          if [ "${{ inputs.quotation-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/quotation" ]; then
-            echo "Creating gamma branch for quotation repository"
-          else
-            echo "Skipping gamma branch for quotation repository"
-            exit 0
-          fi
-          if [ "${{ inputs.reference-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Reference" ]; then
-            echo "Creating gamma branch for Reference repository"
-          else
-            echo "Skipping gamma branch for Reference repository"
-            exit 0
-          fi
-          if [ "${{ inputs.requestmanager-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/RequestManager" ]; then
-            echo "Creating gamma branch for RequestManager repository"
-          else
-            echo "Skipping gamma branch for RequestManager repository"
-            exit 0
-          fi
-          if [ "${{ inputs.scheduler-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Scheduler" ]; then
-            echo "Creating gamma branch for Scheduler repository"
-          else
-            echo "Skipping gamma branch for Scheduler repository"
-            exit 0
-          fi
-          if [ "${{ inputs.scripts-js-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Scripts-js" ]; then
-            echo "Creating gamma branch for Scripts-js repository"
-          else
-            echo "Skipping gamma branch for Scripts-js repository"
-            exit 0
-          fi
-          if [ "${{ inputs.templates-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Templates" ]; then
-            echo "Creating gamma branch for Templates repository"
-          else
-            echo "Skipping gamma branch for Templates repository"
-            exit 0
-          fi
-          if [ "${{ inputs.transactions-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Transactions" ]; then
-            echo "Creating gamma branch for Transactions repository"
-          else
-            echo "Skipping gamma branch for Transactions repository"
-            exit 0
-          fi
-          if [ "${{ inputs.users-repository }}" = "true" ] && [ "${{ matrix.repository }}" = "CoverGo/Users" ]; then
-            echo "Creating gamma branch for Users repository"
-          else
-            echo "Skipping gamma branch for Users repository"
-            exit 0
-          fi
-          
           git config user.name "coverbot"
           git config user.email "infrastructure@covergo.com"
           
@@ -433,7 +106,6 @@ jobs:
           
           echo "✅ Successfully created/updated branch '$BRANCH_NAME' in ${{ matrix.repository }}"          
       - name: Update docker image for RequestManager repository
-        if: matrix.repository == 'chinh-trieu-covergo/RequestManager' && inputs.requestmanager-repository == true
         env:
           BRANCH_NAME: ${{ inputs.branch_name }}        
         run: |          
@@ -442,6 +114,7 @@ jobs:
           # List of docker-compose files to update
           # Collect all docker-compose files in the repository (recursively)
           DOCKER_COMPOSE_FILES=$(find . -type f -name "docker-compose*.yml" -o -name "docker-compose*.yaml")
+          
 
           # Update all relevant CoverGo docker images from :master to :$BRANCH_NAME
           # Replace '/' with '-' in branch name for use in docker image tags
@@ -450,8 +123,8 @@ jobs:
           SERVICES="auth party cases claims3 filesystem policies users products pricing entity-management entity-diary finance channel-management notification-center task-management"
           for service in $SERVICES; do
             image_name=$(echo "$service" | tr '[:upper:]' '[:lower:]')
-            old_img="image: ghcr.io/covergo/${image_name}:master"
-            new_img="image: ghcr.io/covergo/${image_name}:${SANITIZED_BRANCH_NAME}"
+            old_img="image: ghcr.io/chinh-trieu-covergo/${image_name}:master"
+            new_img="image: ghcr.io/chinh-trieu-covergo/${image_name}:${SANITIZED_BRANCH_NAME}"
             for dc_file in $DOCKER_COMPOSE_FILES; do
               sed -i "s|$old_img|$new_img|g" "$dc_file"
             done
@@ -476,16 +149,36 @@ jobs:
       - name: Update build publish to use gamma branch for Reference repository
         env: 
           BRANCH_NAME: ${{ inputs.branch_name }}
-        if: matrix.repository == 'chinh-trieu-covergo/Reference' && inputs.reference-repository == true
+        if:
+          matrix.repository == 'chinh-trieu-covergo/Achievements' ||
+          matrix.repository == 'chinh-trieu-covergo/api-gateway' ||
+          matrix.repository == 'chinh-trieu-covergo/Auth' ||
+          matrix.repository == 'chinh-trieu-covergo/Cases' ||
+          matrix.repository == 'chinh-trieu-covergo/ClaimInvestigation' ||
+          matrix.repository == 'chinh-trieu-covergo/Claims' ||
+          matrix.repository == 'chinh-trieu-covergo/Education' ||
+          matrix.repository == 'chinh-trieu-covergo/FileSystem' ||
+          matrix.repository == 'chinh-trieu-covergo/Gateway' ||
+          matrix.repository == 'chinh-trieu-covergo/Notifications' ||
+          matrix.repository == 'chinh-trieu-covergo/Policies' || 
+          matrix.repository == 'chinh-trieu-covergo/Premium' || 
+          matrix.repository == 'chinh-trieu-covergo/Pricing' ||
+          matrix.repository == 'chinh-trieu-covergo/Products' || 
+          matrix.repository == 'chinh-trieu-covergo/quotation' ||
+          matrix.repository == 'chinh-trieu-covergo/Reference' ||
+          matrix.repository == 'chinh-trieu-covergo/Scheduler' ||
+          matrix.repository == 'chinh-trieu-covergo/Scripts-js' ||
+          matrix.repository == 'chinh-trieu-covergo/Transactions' ||
+          matrix.repository == 'chinh-trieu-covergo/Users'
         run: |
           git checkout "$BRANCH_NAME"
           git pull origin "$BRANCH_NAME"
           BUILD_PUBLISH_FILE_PATH=".github/workflows/build-publish.yml"          
           # Check if 'branchForTag' exists under the 'with:' section. If it does, update its value.
-          # If it doesn't, add it to the 'with:' section.
+          # If it doesn't, add it to the 'with:' section.          
           if grep -A 20 "with:" "$BUILD_PUBLISH_FILE_PATH" | grep -q "branchForTag:"; then
-            sed -i "s|^\(\s*branchForTag:\).*|\1 $BRANCH_NAME|" "$BUILD_PUBLISH_FILE_PATH"
-            echo "Updated branchForTag: $SANITIZED_BRANCH_NAME after line $WITH_LINE" 
+            # Update existing branchForTag value
+            sed -i "s/^[[:space:]]*branchForTag:.*/branchForTag: $BRANCH_NAME/" "$BUILD_PUBLISH_FILE_PATH"
           else
             # Insert branchForTag under the first 'with:' block (typically after 8 lines, which should be right after 'with:')
             # Find the line number for the 'with:' block
@@ -495,9 +188,9 @@ jobs:
               exit 1
             fi
             # Insert the new key immediately after the with: line (line number +1)
-            sed -i "$((WITH_LINE+1))i\ \ \ \ \ \ branchForTag: "$BRANCH_NAME" "$BUILD_PUBLISH_FILE_PATH"
+            sed -i "$((WITH_LINE+1))i\ \ \ \ \ \ branchForTag: $BRANCH_NAME" "$BUILD_PUBLISH_FILE_PATH"
             echo "Inserted branchForTag: $BRANCH_NAME after line no $((WITH_LINE+1))"
-          fi
+          fi         
 
           # Check if there are any changes
           if git diff --quiet; then
@@ -512,7 +205,16 @@ jobs:
       - name: Update build publish to use gamma branch for RequestManager repository
         env: 
           BRANCH_NAME: ${{ inputs.branch_name }}
-        if: matrix.repository == 'chinh-trieu-covergo/RequestManager' && inputs.request-manager == true
+        if: 
+          matrix.repository == 'chinh-trieu-covergo/RequestManager' ||
+          matrix.repository == 'chinh-trieu-covergo/ChannelManagement' ||
+          matrix.repository == 'chinh-trieu-covergo/Claim3' ||
+          matrix.repository == 'chinh-trieu-covergo/EntityDiary' ||
+          matrix.repository == 'chinh-trieu-covergo/EntityManagement' ||
+          matrix.repository == 'chinh-trieu-covergo/FileSystem' ||
+          matrix.repository == 'chinh-trieu-covergo/Finance' ||
+          matrix.repository == 'chinh-trieu-covergo/ProductBuilder' ||
+          matrix.repository == 'chinh-trieu-covergo/Templates'
         run: |
           git checkout "$BRANCH_NAME"
           git pull origin "$BRANCH_NAME"
@@ -521,7 +223,7 @@ jobs:
           # Replace the line 'echo ::set-output name=docker_image_ghcr_tags::${ghcr_tags}' with the new value reflecting the gamma branch
           image_name="request-manager"
           # Using sed to replace all such echo lines, just in case multiple exist
-          sed -i "s|echo ::set-output name=docker_image_ghcr_tags::.*|echo ::set-output name=docker_image_ghcr_tags::ghcr.io/covergo/request-manager:${SANITIZED_BRANCH_NAME}|" "$BUILD_PUBLISH_FILE_PATH"
+          sed -i "s|echo ::set-output name=docker_image_ghcr_tags::.*|echo ::set-output name=docker_image_ghcr_tags::ghcr.io/chinh-trieu-covergo/request-manager:${SANITIZED_BRANCH_NAME}|" "$BUILD_PUBLISH_FILE_PATH"
           
           # Check if there are any changes
           if git diff --quiet; then
