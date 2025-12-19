@@ -43,6 +43,8 @@ jobs:
           - chinh-trieu-covergo/Claims
           - chinh-trieu-covergo/ChannelManagement
           - chinh-trieu-covergo/Claims3
+          
+          
     steps:
       - name: Validate branch name
         env:
@@ -103,7 +105,7 @@ jobs:
           git push -u origin "$BRANCH_NAME"
           
           echo "✅ Successfully created/updated branch '$BRANCH_NAME' in ${{ matrix.repository }}"          
-      - name: Update docker image for RequestManager repository
+      - name: Update docker images
         env:
           BRANCH_NAME: ${{ inputs.branch_name }}        
         run: |          
@@ -144,7 +146,7 @@ jobs:
           git push origin "$BRANCH_NAME"
           
           echo "✅ Successfully committed and pushed docker image update to $BRANCH_NAME"
-      - name: Update build publish to use gamma branch for Reference repository
+      - name: Update build publish to use gamma branch for repositories using new flow
         env: 
           BRANCH_NAME: ${{ inputs.branch_name }}
         if:
@@ -188,8 +190,21 @@ jobs:
             # Insert the new key immediately after the with: line (line number +1)
             sed -i "$((WITH_LINE+1))i\ \ \ \ \ \ branchForTag: $BRANCH_NAME" "$BUILD_PUBLISH_FILE_PATH"
             echo "Inserted branchForTag: $BRANCH_NAME after line no $((WITH_LINE+1))"
-          fi         
+          fi
 
+          # Check if 'skipTest exists under the 'with:' section and below branchForTag. If it does, update its value.
+          # If it doesn't, add it to the 'with:' section.
+          if grep -A 20 "with:" "$BUILD_PUBLISH_FILE_PATH" | grep -q "skipTest:"; then
+            # Update existing skipTest value
+            sed -i "s/^[[:space:]]*skipTest:.*/skipTest: true/" "$BUILD_PUBLISH_FILE_PATH"
+          else
+            # Insert skipTest under the first 'with:' block (typically after 8 lines, which should be right after 'with:')
+            # Find the line number for the 'with:' block
+            WITH_LINE=$(grep -n -m 1 "with:" "$BUILD_PUBLISH_FILE_PATH" | cut -d: -f1)
+          fi
+
+
+          
           # Check if there are any changes
           if git diff --quiet; then
             echo "⚠️  No changes detected"
@@ -200,13 +215,13 @@ jobs:
           git commit -m "chore: update build publish to use gamma branch"
           git push origin $BRANCH_NAME
           echo "✅ Successfully committed and pushed build publish update to $BRANCH_NAME"
-      - name: Update build publish to use gamma branch for RequestManager repository
+      - name: Update build publish to use gamma branch for repositories using old flow
         env: 
           BRANCH_NAME: ${{ inputs.branch_name }}
         if: 
           matrix.repository == 'chinh-trieu-covergo/RequestManager' ||
           matrix.repository == 'chinh-trieu-covergo/ChannelManagement' ||
-          matrix.repository == 'chinh-trieu-covergo/Claim3' ||
+          matrix.repository == 'chinh-trieu-covergo/Claims3' ||
           matrix.repository == 'chinh-trieu-covergo/EntityDiary' ||
           matrix.repository == 'chinh-trieu-covergo/EntityManagement' ||
           matrix.repository == 'chinh-trieu-covergo/FileSystem' ||
