@@ -211,6 +211,7 @@ jobs:
       - name: Update build publish to use gamma branch for repositories using old flow
         env: 
           BRANCH_NAME: ${{ inputs.branch_name }}
+          REPOSITORY_NAME: ${{ matrix.repository }}
         if: 
           matrix.repository == 'chinh-trieu-covergo/RequestManager' ||
           matrix.repository == 'chinh-trieu-covergo/ChannelManagement' ||
@@ -229,7 +230,7 @@ jobs:
           # Replace the line 'echo ::set-output name=docker_image_ghcr_tags::${ghcr_tags}' with the new value reflecting the gamma branch
           image_name="request-manager"
           # Using sed to replace all such echo lines, just in case multiple exist
-          sed -i "s|echo ::set-output name=docker_image_ghcr_tags::.*|echo ::set-output name=docker_image_ghcr_tags::ghcr.io/${matrix.repository}:${SANITIZED_BRANCH_NAME}|" "$BUILD_PUBLISH_FILE_PATH"
+          sed -i "s|echo ::set-output name=docker_image_ghcr_tags::.*|echo ::set-output name=docker_image_ghcr_tags::ghcr.io/${REPOSITORY_NAME}:${SANITIZED_BRANCH_NAME}|" "$BUILD_PUBLISH_FILE_PATH"
           
           # Check if there are any changes
           if git diff --quiet; then
