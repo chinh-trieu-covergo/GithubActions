@@ -18,31 +18,31 @@ jobs:
         repository:
           - chinh-trieu-covergo/Reference
           - chinh-trieu-covergo/RequestManager
-          - chinh-trieu-covergo/quotation,
-          - chinh-trieu-covergo/Products,
-          - chinh-trieu-covergo/Premium,
-          - chinh-trieu-covergo/Pricing,
-          - chinh-trieu-covergo/Policies,
-          - chinh-trieu-covergo/Notifications,
-          - chinh-trieu-covergo/FileSystem,
-          - chinh-trieu-covergo/Education,
-          - chinh-trieu-covergo/EntityDiary,
-          - chinh-trieu-covergo/EntityManagement,
-          - chinh-trieu-covergo/Finance,
-          - chinh-trieu-covergo/ProductBuilder,
-          - chinh-trieu-covergo/Templates,
-          - chinh-trieu-covergo/Transactions,
-          - chinh-trieu-covergo/Users,
-          - chinh-trieu-covergo/Scheduler,
-          - chinh-trieu-covergo/Scripts-js,
-          - chinh-trieu-covergo/Achievements,
-          - chinh-trieu-covergo/api-gateway,
-          - chinh-trieu-covergo/Auth,
-          - chinh-trieu-covergo/Cases,
-          - chinh-trieu-covergo/ClaimInvestigation,
-          - chinh-trieu-covergo/Claims,
-          - chinh-trieu-covergo/ChannelManagement,
-          - chinh-trieu-covergo/Claim3,
+          - chinh-trieu-covergo/quotation
+          - chinh-trieu-covergo/Products
+          - chinh-trieu-covergo/Premium
+          - chinh-trieu-covergo/Pricing
+          - chinh-trieu-covergo/Policies
+          - chinh-trieu-covergo/Notifications
+          - chinh-trieu-covergo/FileSystem
+          - chinh-trieu-covergo/Education
+          - chinh-trieu-covergo/EntityDiary
+          - chinh-trieu-covergo/EntityManagement
+          - chinh-trieu-covergo/Finance
+          - chinh-trieu-covergo/ProductBuilder
+          - chinh-trieu-covergo/Templates
+          - chinh-trieu-covergo/Transactions
+          - chinh-trieu-covergo/Users
+          - chinh-trieu-covergo/Scheduler
+          - chinh-trieu-covergo/Scripts-js
+          - chinh-trieu-covergo/Achievements
+          - chinh-trieu-covergo/api-gateway
+          - chinh-trieu-covergo/Auth
+          - chinh-trieu-covergo/Cases
+          - chinh-trieu-covergo/ClaimInvestigation
+          - chinh-trieu-covergo/Claims
+          - chinh-trieu-covergo/ChannelManagement
+          - chinh-trieu-covergo/Claim3
           
           
     steps:
