@@ -53,6 +53,7 @@ jobs:
         run: |
             REPO="${{ matrix.repository }}"
             echo "Repository from matrix: $REPO"
+            echo "current SKIP_GAMMA_TEST: ${vars.SKIP_GAMMA_TEST}"
             # If you want to verify via github CLI (gh), you can fetch repository details like this:            
             SKIP_GAMMA_TEST=$(gh variable get SKIP_GAMMA_TEST --repo "$REPO" 2>/dev/null | awk -F': ' '/SKIP_GAMMA_TEST/ {print $2}')
             if [[ -z "$SKIP_GAMMA_TEST" ]]; then
