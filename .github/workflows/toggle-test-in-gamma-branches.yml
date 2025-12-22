@@ -49,11 +49,12 @@ jobs:
       - name: Enable test in gamma branches for ${{ matrix.repository }}
         env:
           token: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
-          GH_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}          
+          SKIP: ${{ vars.SKIP_GAMMA_TEST }}
         run: |
             REPO="${{ matrix.repository }}"
             echo "Repository from matrix: $REPO"
-            echo "current SKIP_GAMMA_TEST: ${vars.SKIP_GAMMA_TEST}"
+            echo "current SKIP_GAMMA_TEST: ${SKIP}"
             # If you want to verify via github CLI (gh), you can fetch repository details like this:            
             SKIP_GAMMA_TEST=$(gh variable get SKIP_GAMMA_TEST --repo "$REPO" 2>/dev/null | awk -F': ' '/SKIP_GAMMA_TEST/ {print $2}')
             if [[ -z "$SKIP_GAMMA_TEST" ]]; then
