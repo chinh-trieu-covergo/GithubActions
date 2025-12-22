@@ -227,8 +227,14 @@ jobs:
           git pull origin "$BRANCH_NAME"
           BUILD_PUBLISH_FILE_PATH=".github/workflows/build-publish.yml"
           SANITIZED_BRANCH_NAME=$(echo "$BRANCH_NAME" | tr '/' '-') 
-          # Replace the line 'echo ::set-output name=docker_image_ghcr_tags::${ghcr_tags}' with the new value reflecting the gamma branch
-          image_name="request-manager"
+
+          if grep -q "echo ::set-output name=docker_image_ghcr_tags::" "$BUILD_PUBLISH_FILE_PATH"; then
+            echo "'echo ::set-output name=docker_image_ghcr_tags::' found in $BUILD_PUBLISH_FILE_PATH ${{ matrix.repository }}"
+          else
+            echo "'echo ::set-output name=docker_image_ghcr_tags::' NOT found in $BUILD_PUBLISH_FILE_PATH ${{ matrix.repository }}"
+          fi
+          
+          # Replace the line 'echo ::set-output name=docker_image_ghcr_tags::${ghcr_tags}' with the new value reflecting the gamma branch          
           # Using sed to replace all such echo lines, just in case multiple exist
           sed -i "s|echo ::set-output name=docker_image_ghcr_tags::.*|echo ::set-output name=docker_image_ghcr_tags::ghcr.io/${REPOSITORY_NAME}:${SANITIZED_BRANCH_NAME}|" "$BUILD_PUBLISH_FILE_PATH"
           
