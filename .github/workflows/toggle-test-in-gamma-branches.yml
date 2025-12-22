@@ -57,6 +57,7 @@ jobs:
             echo "current SKIP_GAMMA_TEST: $SKIP"
             # If you want to verify via github CLI (gh), you can fetch repository details like this:            
             SKIP_GAMMA_TEST=$(gh variable get SKIP_GAMMA_TEST --repo "$REPO" 2>/dev/null | awk -F': ' '/SKIP_GAMMA_TEST/ {print $2}')
+            echo "SKIP_GAMMA_TEST value: $SKIP_GAMMA_TEST"
             if [[ -z "$SKIP_GAMMA_TEST" ]]; then
               echo "SKIP_GAMMA_TEST not found, creating it with value=true"
               gh variable set SKIP_GAMMA_TEST --body "true" --repo "$REPO"
