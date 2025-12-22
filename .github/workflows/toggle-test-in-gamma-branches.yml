@@ -43,23 +43,30 @@ jobs:
           GH_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
         if: (${{ vars.SKIP_GAMMA_TEST }} != 'true')           
         run: |
+            - name: Checkout ${{ matrix.repository }}      
+        env:
+          BRANCH_NAME: ${{ inputs.branch_name }}
+          GH_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ matrix.repository }}
+          token: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+      - name: Enable test in gamma branches for ${{ matrix.repository }}
+        env:
+          token: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
             REPO="${{ matrix.repository }}"
             echo "Repository from matrix: $REPO"
-            echo "SKIP_GAMMA_TEST vars value: $vars.SKIP_GAMMA_TEST"
             SKIP_GAMMA_TEST=$(gh variable get SKIP_GAMMA_TEST --repo "$REPO")
             echo "SKIP_GAMMA_TEST: $SKIP_GAMMA_TEST"
             if [[ -z "$SKIP_GAMMA_TEST" ]]; then
-              echo "SKIP_GAMMA_TEST not found, creating it with value=true"
-              gh variable set SKIP_GAMMA_TEST --body "true" --repo "$REPO"
-              SKIP_GAMMA_TEST="true"
+              echo "SKIP_GAMMA_TEST not found, creating it with value=false"
+              gh variable set SKIP_GAMMA_TEST --body "false" --repo "$REPO"              
             fi
-            if [[ "$SKIP_GAMMA_TEST" == "true" ]]; then
+            if [[ "$SKIP_GAMMA_TEST" != "true" ]]; then
               gh variable set SKIP_GAMMA_TEST --body "false" --repo "$REPO"
               echo "Toggled SKIP_GAMMA_TEST to false"
-            elif [[ "$SKIP_GAMMA_TEST" == "false" ]]; then
-              gh variable set SKIP_GAMMA_TEST --body "true" --repo "$REPO"
-              echo "Toggled SKIP_GAMMA_TEST to true"
-            else
-              echo "SKIP_GAMMA_TEST variable not found or not set to true/false. Skipping toggle."
             fi
         
