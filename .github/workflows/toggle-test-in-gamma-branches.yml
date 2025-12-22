@@ -37,7 +37,15 @@ jobs:
           - chinh-trieu-covergo/ChannelManagement
           - chinh-trieu-covergo/Claims3
     steps:
-      - name: Enable test in gamma branches for ${{ matrix.repository }}        
+      - name: Checkout ${{ matrix.repository }}      
+        env:
+          BRANCH_NAME: ${{ inputs.branch_name }}
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ matrix.repository }}
+          token: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+      - name: Enable test in gamma branches for ${{ matrix.repository }}
         run: |
             REPO="${{ matrix.repository }}"
             echo "Repository from matrix: $REPO"
