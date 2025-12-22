@@ -37,19 +37,19 @@ jobs:
           - chinh-trieu-covergo/ChannelManagement
           - chinh-trieu-covergo/Claims3
     steps:
-      - name: Enable test in gamma branches for ${{ matrix.repository }}       
-        run: |         
-          # Print out and toggle the SKIP_GAMMA_TEST variable using vars context
-          echo "${{ matrix.repository }}"
-          echo "Current SKIP_GAMMA_TEST value: ${{ vars.SKIP_GAMMA_TEST }}"
-          if [[ "${{ vars.SKIP_GAMMA_TEST }}" == "true" ]]; then
-            echo "Toggled SKIP_GAMMA_TEST to false"
-            # Set the new value via GitHub CLI (requires workflow token with repo or actions:write scope)
-            gh variable set SKIP_GAMMA_TEST --body "false" --repo "${{ github.repository }}"
-          elif [[ "${{ vars.SKIP_GAMMA_TEST }}" == "false" ]]; then
-            echo "Toggled SKIP_GAMMA_TEST to true"
-            gh variable set SKIP_GAMMA_TEST --body "true" --repo "${{ github.repository }}"
-          else
-            echo "SKIP_GAMMA_TEST variable not found or not set to true/false. Skipping toggle."
-          fi
+      - name: Enable test in gamma branches for ${{ matrix.repository }}        
+        run: |
+            REPO="${{ matrix.repository }}"
+            echo "Repository from matrix: $REPO"
+            # If you want to verify via github CLI (gh), you can fetch repository details like this:
+            gh variable get SKIP_GAMMA_TEST --repo "$REPO"
+            if [[ "$SKIP_GAMMA_TEST" == "true" ]]; then
+              gh variable set SKIP_GAMMA_TEST --body "false" --repo "$REPO"
+              echo "Toggled SKIP_GAMMA_TEST to false"
+            elif [[ "$SKIP_GAMMA_TEST" == "false" ]]; then
+              gh variable set SKIP_GAMMA_TEST --body "true" --repo "$REPO"
+              echo "Toggled SKIP_GAMMA_TEST to true"
+            else
+              echo "SKIP_GAMMA_TEST variable not found or not set to true/false. Skipping toggle."
+            fi
         
