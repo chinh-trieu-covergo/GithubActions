@@ -1,4 +1,4 @@
-name: Create gamma branches in multiple CoverGo repositories
+name: Create Gamma branches in multiple CoverGo repositories
 
 on:
   workflow_dispatch:
@@ -18,31 +18,31 @@ jobs:
         repository:
           - chinh-trieu-covergo/Reference
           - chinh-trieu-covergo/RequestManager
-          - chinh-trieu-covergo/quotation
-          - chinh-trieu-covergo/Products
-          - chinh-trieu-covergo/Premium
-          - chinh-trieu-covergo/Pricing
-          - chinh-trieu-covergo/Policies
-          - chinh-trieu-covergo/Notifications
-          - chinh-trieu-covergo/FileSystem
-          - chinh-trieu-covergo/Education
-          - chinh-trieu-covergo/EntityDiary
-          - chinh-trieu-covergo/EntityManagement
-          - chinh-trieu-covergo/Finance
-          - chinh-trieu-covergo/ProductBuilder
-          - chinh-trieu-covergo/Templates
-          - chinh-trieu-covergo/Transactions
-          - chinh-trieu-covergo/Users
-          - chinh-trieu-covergo/Scheduler
-          - chinh-trieu-covergo/Scripts-js
-          - chinh-trieu-covergo/Achievements
-          - chinh-trieu-covergo/api-gateway
-          - chinh-trieu-covergo/Auth
-          - chinh-trieu-covergo/Cases
-          - chinh-trieu-covergo/ClaimInvestigation
-          - chinh-trieu-covergo/Claims
-          - chinh-trieu-covergo/ChannelManagement
-          - chinh-trieu-covergo/Claims3
+          - chinh-trieu-covergo/quotation,
+          - chinh-trieu-covergo/Products,
+          - chinh-trieu-covergo/Premium,
+          - chinh-trieu-covergo/Pricing,
+          - chinh-trieu-covergo/Policies,
+          - chinh-trieu-covergo/Notifications,
+          - chinh-trieu-covergo/FileSystem,
+          - chinh-trieu-covergo/Education,
+          - chinh-trieu-covergo/EntityDiary,
+          - chinh-trieu-covergo/EntityManagement,
+          - chinh-trieu-covergo/Finance,
+          - chinh-trieu-covergo/ProductBuilder,
+          - chinh-trieu-covergo/Templates,
+          - chinh-trieu-covergo/Transactions,
+          - chinh-trieu-covergo/Users,
+          - chinh-trieu-covergo/Scheduler,
+          - chinh-trieu-covergo/Scripts-js,
+          - chinh-trieu-covergo/Achievements,
+          - chinh-trieu-covergo/api-gateway,
+          - chinh-trieu-covergo/Auth,
+          - chinh-trieu-covergo/Cases,
+          - chinh-trieu-covergo/ClaimInvestigation,
+          - chinh-trieu-covergo/Claims,
+          - chinh-trieu-covergo/ChannelManagement,
+          - chinh-trieu-covergo/Claim3,
           
           
     steps:
@@ -105,6 +105,10 @@ jobs:
           git push -u origin "$BRANCH_NAME"
           
           echo "✅ Successfully created/updated branch '$BRANCH_NAME' in ${{ matrix.repository }}"          
+      - name: Disable test in gamma branches for ${{ matrix.repository }}        
+        run: |         
+          gh variable set SKIP_GAMMA_TEST --body "true" --repo "$REPO"
+          echo "✅ Successfully disabled test in gamma branches for ${{ matrix.repository }}"
       - name: Update docker images
         env:
           BRANCH_NAME: ${{ inputs.branch_name }}        
@@ -113,12 +117,11 @@ jobs:
 
           # List of docker-compose files to update
           # Collect all docker-compose files in the repository (recursively)
-          DOCKER_COMPOSE_FILES=$(find . -type f -name "docker-compose*.yml" -o -name "docker-compose*.yaml")
-          
+          DOCKER_COMPOSE_FILES=$(find . -type f -name "docker-compose*.yml" -o -name "docker-compose*.yaml")          
 
           # Update all relevant CoverGo docker images from :master to :$BRANCH_NAME
           # Replace '/' with '-' in branch name for use in docker image tags
-          SANITIZED_BRANCH_NAME=$(echo "$BRANCH_NAME" | tr '/' '-')          
+          SANITIZED_BRANCH_NAME=$(echo "$BRANCH_NAME" | tr '/' '-')
           
           SERVICES="auth party cases claims3 filesystem policies users products pricing entity-management entity-diary finance channel-management notification-center task-management"
           for service in $SERVICES; do
@@ -192,23 +195,6 @@ jobs:
             echo "Inserted branchForTag: $BRANCH_NAME after line no $((WITH_LINE+1))"
           fi
 
-           # Check if 'skipTest exists under the 'with:' section and below branchForTag. If it does, update its value.
-          # If it doesn't, add it to the 'with:' section.
-          if grep -A 20 "with:" "$BUILD_PUBLISH_FILE_PATH" | grep -q "skipTest:"; then
-            # Update existing skipTest value
-            sed -i "s/^[[:space:]]*skipTest:.*/skipTest: true/" "$BUILD_PUBLISH_FILE_PATH"
-          else
-            # Insert skipTest under the first 'with:' block (right after the first occurrence of 'with:')
-            WITH_LINE=$(grep -n -m 1 "with:" "$BUILD_PUBLISH_FILE_PATH" | cut -d: -f1)
-            if [ -z "$WITH_LINE" ]; then
-              echo "Could not find 'with:' block in $BUILD_PUBLISH_FILE_PATH"
-              exit 1
-            fi
-            # Insert the new key immediately after the with: line (line number +1)
-            sed -i "$((WITH_LINE+1))i\ \ \ \ \ \ skipTest: true" "$BUILD_PUBLISH_FILE_PATH"
-            echo "Inserted skipTest: true after line no $((WITH_LINE+1))"
-          fi
-          
           # Check if there are any changes
           if git diff --quiet; then
             echo "⚠️  No changes detected"
@@ -240,7 +226,7 @@ jobs:
           # Replace the line 'echo ::set-output name=docker_image_ghcr_tags::${ghcr_tags}' with the new value reflecting the gamma branch
           image_name="request-manager"
           # Using sed to replace all such echo lines, just in case multiple exist
-          sed -i "s|echo ::set-output name=docker_image_ghcr_tags::.*|echo ::set-output name=docker_image_ghcr_tags::ghcr.io/chinh-trieu-covergo/request-manager:${SANITIZED_BRANCH_NAME}|" "$BUILD_PUBLISH_FILE_PATH"
+          sed -i "s|echo ::set-output name=docker_image_ghcr_tags::.*|echo ::set-output name=docker_image_ghcr_tags::ghcr.io/${matrix.repository}:${SANITIZED_BRANCH_NAME}|" "$BUILD_PUBLISH_FILE_PATH"
           
           # Check if there are any changes
           if git diff --quiet; then
