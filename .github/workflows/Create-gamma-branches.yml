@@ -42,9 +42,7 @@ jobs:
           - chinh-trieu-covergo/ClaimInvestigation
           - chinh-trieu-covergo/Claims
           - chinh-trieu-covergo/ChannelManagement
-          - chinh-trieu-covergo/Claim3
-          
-          
+          - chinh-trieu-covergo/Claims3
     steps:
       - name: Validate branch name
         env:
