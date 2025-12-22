@@ -44,7 +44,6 @@ jobs:
         run: |
             REPO="${{ matrix.repository }}"
             echo "Repository from matrix: $REPO"
-            echo "current vars SKIP_GAMMA_TEST: ${vars.SKIP_GAMMA_TEST}"            
             SKIP_GAMMA_TEST=$(gh variable get SKIP_GAMMA_TEST --repo "$REPO")
             echo "SKIP_GAMMA_TEST: $SKIP_GAMMA_TEST"
             if [[ -z "$SKIP_GAMMA_TEST" ]]; then
