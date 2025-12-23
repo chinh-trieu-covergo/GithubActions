@@ -217,10 +217,10 @@ jobs:
           BRANCH_NAME: ${{ inputs.branch_name }}
           REPOSITORY: ${{ matrix.repository }}
         if: 
-          matrix.repository == 'CoverGo/RequestManager' ||          
-          matrix.repository == 'CoverGo/Claims3' ||
-          matrix.repository == 'CoverGo/ProductBuilder' ||
-          matrix.repository == 'CoverGo/Templates'
+          matrix.repository == 'chinh-trieu-covergo/RequestManager' ||          
+          matrix.repository == 'chinh-trieu-covergo/Claims3' ||
+          matrix.repository == 'chinh-trieu-covergo/ProductBuilder' ||
+          matrix.repository == 'chinh-trieu-covergo/Templates'
         run: |
           git checkout "$BRANCH_NAME"
           git pull origin "$BRANCH_NAME"
