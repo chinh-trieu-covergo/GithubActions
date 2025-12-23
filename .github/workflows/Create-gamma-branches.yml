@@ -119,7 +119,10 @@ jobs:
           # List of docker-compose files to update
           # Collect all docker-compose files in the repository (recursively)
           DOCKER_COMPOSE_FILES=$(find . -type f -name "docker-compose*.yml" -o -name "docker-compose*.yaml")          
-
+          echo "Found docker compose files:"
+          for dc_file in $DOCKER_COMPOSE_FILES; do
+            echo "$dc_file"
+          done
           # Update all relevant CoverGo docker images from :master to :$BRANCH_NAME
           # Replace '/' with '-' in branch name for use in docker image tags
           SANITIZED_BRANCH_NAME=$(echo "$BRANCH_NAME" | tr '/' '-')
