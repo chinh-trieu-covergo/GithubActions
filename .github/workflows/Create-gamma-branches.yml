@@ -103,7 +103,10 @@ jobs:
           git push -u origin "$BRANCH_NAME"
           
           echo "✅ Successfully created/updated branch '$BRANCH_NAME' in ${{ matrix.repository }}"          
-      - name: Disable test in gamma branches for ${{ matrix.repository }}        
+      - name: Disable test in gamma branches for ${{ matrix.repository }}
+        env:
+          token: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }} 
         run: |         
           gh variable set SKIP_GAMMA_TEST --body "true" --repo "$REPO"
           echo "✅ Successfully disabled test in gamma branches for ${{ matrix.repository }}"
