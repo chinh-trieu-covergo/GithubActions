@@ -27,7 +27,7 @@ jobs:
           - chinh-trieu-covergo/FileSystem
           - chinh-trieu-covergo/Education
           - chinh-trieu-covergo/EntityDiary
-          - chinh-trieu-covergo/EntityManagement
+          - chinh-trieu-covergo/EntityManagemen
           - chinh-trieu-covergo/Finance
           - chinh-trieu-covergo/ProductBuilder
           - chinh-trieu-covergo/Templates
@@ -70,7 +70,7 @@ jobs:
           # Get the default branch (main or master)
           # Try to get the default branch from remote HEAD
           DEFAULT_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo "")
-          echo "Using default branch 1: $DEFAULT_BRANCH"
+           echo "Using default branch: $DEFAULT_BRANCH"
           # If that fails, try common branch names
           if [ -z "$DEFAULT_BRANCH" ]; then
             if git show-ref --verify --quiet refs/remotes/origin/main; then
@@ -103,10 +103,7 @@ jobs:
           git push -u origin "$BRANCH_NAME"
           
           echo "✅ Successfully created/updated branch '$BRANCH_NAME' in ${{ matrix.repository }}"          
-      - name: Disable test in gamma branches for ${{ matrix.repository }}
-        env:
-          token: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
-          GH_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
+      - name: Disable test in gamma branches for ${{ matrix.repository }}        
         run: |         
           gh variable set SKIP_GAMMA_TEST --body "true" --repo "$REPO"
           echo "✅ Successfully disabled test in gamma branches for ${{ matrix.repository }}"
@@ -124,13 +121,15 @@ jobs:
           # Replace '/' with '-' in branch name for use in docker image tags
           SANITIZED_BRANCH_NAME=$(echo "$BRANCH_NAME" | tr '/' '-')
           
-          SERVICES="auth party cases claims3 filesystem policies users products pricing entity-management entity-diary finance channel-management notification-center task-management"
+          SERVICES="reference requestmanager quotation products premium pricing policies notifications filesystem education entitydiary entitymanagemen finance productbuilder templates transactions users scheduler scripts-js achievements api-gateway auth cases claiminvestigation claims channelmanagement claims3"
           for service in $SERVICES; do
             image_name=$(echo "$service" | tr '[:upper:]' '[:lower:]')
-            old_img="image: ghcr.io/chinh-trieu-covergo/${image_name}:master"
+            old_img_master="image: ghcr.io/chinh-trieu-covergo/${image_name}:master"
+            old_img_latest="image: ghcr.io/chinh-trieu-covergo/${image_name}:latest"
             new_img="image: ghcr.io/chinh-trieu-covergo/${image_name}:${SANITIZED_BRANCH_NAME}"
             for dc_file in $DOCKER_COMPOSE_FILES; do
-              sed -i "s|$old_img|$new_img|g" "$dc_file"
+              sed -i "s|$old_img_master|$new_img|g" "$dc_file"
+              sed -i "s|$old_img_latest|$new_img|g" "$dc_file"
             done
             echo "Updated $service image in all docker-compose files"
           done
@@ -160,8 +159,12 @@ jobs:
           matrix.repository == 'chinh-trieu-covergo/Cases' ||
           matrix.repository == 'chinh-trieu-covergo/ClaimInvestigation' ||
           matrix.repository == 'chinh-trieu-covergo/Claims' ||
+          matrix.repository == 'chinh-trieu-covergo/ChannelManagement' ||
           matrix.repository == 'chinh-trieu-covergo/Education' ||
+          matrix.repository == 'chinh-trieu-covergo/EntityManagement' ||
+          matrix.repository == 'chinh-trieu-covergo/EntityDiary' ||
           matrix.repository == 'chinh-trieu-covergo/FileSystem' ||
+          matrix.repository == 'chinh-trieu-covergo/Finance' ||
           matrix.repository == 'chinh-trieu-covergo/Gateway' ||
           matrix.repository == 'chinh-trieu-covergo/Notifications' ||
           matrix.repository == 'chinh-trieu-covergo/Policies' || 
@@ -209,15 +212,9 @@ jobs:
       - name: Update build publish to use gamma branch for repositories using old flow
         env: 
           BRANCH_NAME: ${{ inputs.branch_name }}
-          REPOSITORY_NAME: ${{ matrix.repository }}
         if: 
-          matrix.repository == 'chinh-trieu-covergo/RequestManager' ||
-          matrix.repository == 'chinh-trieu-covergo/ChannelManagement' ||
+          matrix.repository == 'chinh-trieu-covergo/RequestManager' ||          
           matrix.repository == 'chinh-trieu-covergo/Claims3' ||
-          matrix.repository == 'chinh-trieu-covergo/EntityDiary' ||
-          matrix.repository == 'chinh-trieu-covergo/EntityManagement' ||
-          matrix.repository == 'chinh-trieu-covergo/FileSystem' ||
-          matrix.repository == 'chinh-trieu-covergo/Finance' ||
           matrix.repository == 'chinh-trieu-covergo/ProductBuilder' ||
           matrix.repository == 'chinh-trieu-covergo/Templates'
         run: |
@@ -225,16 +222,10 @@ jobs:
           git pull origin "$BRANCH_NAME"
           BUILD_PUBLISH_FILE_PATH=".github/workflows/build-publish.yml"
           SANITIZED_BRANCH_NAME=$(echo "$BRANCH_NAME" | tr '/' '-') 
-
-          if grep -q "echo ::set-output name=docker_image_ghcr_tags::" "$BUILD_PUBLISH_FILE_PATH"; then
-            echo "'echo ::set-output name=docker_image_ghcr_tags::' found in $BUILD_PUBLISH_FILE_PATH ${{ matrix.repository }}"
-          else
-            echo "'echo ::set-output name=docker_image_ghcr_tags::' NOT found in $BUILD_PUBLISH_FILE_PATH ${{ matrix.repository }}"
-          fi
-          
           # Replace the line 'echo ::set-output name=docker_image_ghcr_tags::${ghcr_tags}' with the new value reflecting the gamma branch          
-          # Using sed to replace all such echo lines, just in case multiple exist
-          sed -i "s|echo ::set-output name=docker_image_ghcr_tags::.*|echo ::set-output name=docker_image_ghcr_tags::ghcr.io/${REPOSITORY_NAME}:${SANITIZED_BRANCH_NAME}|" "$BUILD_PUBLISH_FILE_PATH"
+          # Using sed to replace all such echo lines, just in case multiple exist          
+
+          sed -i "s|*echo ::set-output name=docker_image_ghcr_tags::.*|echo ::set-output name=docker_image_ghcr_tags::ghcr.io/${matrix.repository}:${SANITIZED_BRANCH_NAME}|" "$BUILD_PUBLISH_FILE_PATH"
           
           # Check if there are any changes
           if git diff --quiet; then
