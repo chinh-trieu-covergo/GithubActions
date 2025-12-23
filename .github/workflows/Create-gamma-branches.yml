@@ -134,6 +134,11 @@ jobs:
             old_img_latest="image: ghcr.io/chinh-trieu-covergo/${image_name}:latest"
             new_img="image: ghcr.io/chinh-trieu-covergo/${image_name}:${SANITIZED_BRANCH_NAME}"
             for dc_file in $DOCKER_COMPOSE_FILES; do
+              if grep -q "$old_img_master" "$dc_file" || grep -q "$old_img_latest" "$dc_file"; then
+                echo "Found $old_img_master or $old_img_latest in $dc_file"
+              else
+                echo "Did not find $old_img_master or $old_img_latest in $dc_file"
+              fi
               sed -i "s|$old_img_master|$new_img|g" "$dc_file"
               sed -i "s|$old_img_latest|$new_img|g" "$dc_file"
             done
