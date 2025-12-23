@@ -27,7 +27,7 @@ jobs:
           - chinh-trieu-covergo/FileSystem
           - chinh-trieu-covergo/Education
           - chinh-trieu-covergo/EntityDiary
-          - chinh-trieu-covergo/EntityManagemen
+          - chinh-trieu-covergo/EntityManagement
           - chinh-trieu-covergo/Finance
           - chinh-trieu-covergo/ProductBuilder
           - chinh-trieu-covergo/Templates
