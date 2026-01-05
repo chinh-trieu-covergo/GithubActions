@@ -242,16 +242,12 @@ jobs:
           
           # Replace the line 'echo ::set-output name=docker_image_ghcr_tags::${ghcr_tags}' with the new value reflecting the gamma branch          
           # Using sed to replace all such echo lines, just in case multiple exist          
-          sed -i "s|*echo ::set-output name=docker_image_ghcr_tags::.*|echo ::set-output name=docker_image_ghcr_tags::ghcr.io/${REPOSITORY}:${SANITIZED_BRANCH_NAME}|" "$BUILD_PUBLISH_FILE_PATH"
+          # sed -i "s|*echo ::set-output name=docker_image_ghcr_tags::.*|echo ::set-output name=docker_image_ghcr_tags::ghcr.io/${REPOSITORY}:${SANITIZED_BRANCH_NAME}|" "$BUILD_PUBLISH_FILE_PATH"
 
           # Replace any echo ::set-output name=docker_image_ghcr_tags::${ghcr_tags} line(s) with the gamma branch tag version          
           sed -i "s|echo ::set-output name=docker_image_ghcr_tags::\${ghcr_tags}|echo ::set-output name=docker_image_ghcr_tags::ghcr.io/${REPOSITORY}:${SANITIZED_BRANCH_NAME}|" "$BUILD_PUBLISH_FILE_PATH"
           
-          if grep -q 'echo ::set-output name=docker_image_ghcr_tags::${ghcr_tags}' "$BUILD_PUBLISH_FILE_PATH"; then
-            echo "Found 'echo ::set-output name=docker_image_ghcr_tags::\${ghcr_tags}' in $BUILD_PUBLISH_FILE_PATH"
-          else
-            echo "Did not find 'echo ::set-output name=docker_image_ghcr_tags::\${ghcr_tags}' in $BUILD_PUBLISH_FILE_PATH"
-          fi
+          
           
           # Check if there are any changes
           if git diff --quiet; then
