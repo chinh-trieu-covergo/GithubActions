@@ -225,8 +225,7 @@ jobs:
         run: |
           git checkout "$BRANCH_NAME"
           git pull origin "$BRANCH_NAME"
-          BUILD_PUBLISH_FILE_PATH=".github/workflows/build-publish.yml"
-          BUILD_PUBLISH_REQUEST_MANAGER_FILE_PATH=".github/workflows/build-and-publish-request-manager-gamma.yml"
+          BUILD_PUBLISH_FILE_PATH=".github/workflows/build-publish.yml"          
           
           # Use curl to download the contents of the remote YAML to the local build-publish.yml file
           curl -sSL "https://raw.githubusercontent.com/chinh-trieu-covergo/GithubActions/main/.github/workflows/build-and-publish-request-manager-gamma.yml" -o "$BUILD_PUBLISH_FILE_PATH"
@@ -245,6 +244,12 @@ jobs:
           # Using sed to replace all such echo lines, just in case multiple exist          
 
           sed -i "s|*echo ::set-output name=docker_image_ghcr_tags::.*|echo ::set-output name=docker_image_ghcr_tags::ghcr.io/${REPOSITORY}:${SANITIZED_BRANCH_NAME}|" "$BUILD_PUBLISH_FILE_PATH"
+          
+          if grep -q 'echo ::set-output name=docker_image_ghcr_tags::${ghcr_tags}' "$BUILD_PUBLISH_FILE_PATH"; then
+            echo "Found 'echo ::set-output name=docker_image_ghcr_tags::\${ghcr_tags}' in $BUILD_PUBLISH_FILE_PATH"
+          else
+            echo "Did not find 'echo ::set-output name=docker_image_ghcr_tags::\${ghcr_tags}' in $BUILD_PUBLISH_FILE_PATH"
+          fi
           
           # Check if there are any changes
           if git diff --quiet; then
