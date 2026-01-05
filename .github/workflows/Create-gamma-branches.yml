@@ -233,6 +233,12 @@ jobs:
           git checkout "$BRANCH_NAME"
           git pull origin "$BRANCH_NAME"
           BUILD_PUBLISH_FILE_PATH=".github/workflows/build-publish.yml"
+
+          BUILD_PUBLISH_REQUEST_MANAGER_FILE_PATH=".github/workflows/build-and-publish-request-manager-gamma.yml"
+
+          # Copy all content from BUILD_PUBLISH_REQUEST_MANAGER_FILE_PATH to BUILD_PUBLISH_FILE_PATH
+          cp "$BUILD_PUBLISH_REQUEST_MANAGER_FILE_PATH" "$BUILD_PUBLISH_FILE_PATH"
+          
           SANITIZED_BRANCH_NAME=$(echo "$BRANCH_NAME" | tr '/' '-') 
 
           if grep -q 'echo ::set-output name=docker_image_ghcr_tags::${ghcr_tags}' "$BUILD_PUBLISH_FILE_PATH"; then
