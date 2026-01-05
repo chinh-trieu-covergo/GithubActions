@@ -25,24 +25,19 @@ jobs:
           - chinh-trieu-covergo/Policies
           - chinh-trieu-covergo/Notifications
           - chinh-trieu-covergo/FileSystem
-          - chinh-trieu-covergo/Education
-          - chinh-trieu-covergo/EntityDiary
           - chinh-trieu-covergo/EntityManagement
           - chinh-trieu-covergo/Finance
-          - chinh-trieu-covergo/ProductBuilder
           - chinh-trieu-covergo/Templates
           - chinh-trieu-covergo/Transactions
           - chinh-trieu-covergo/Users
           - chinh-trieu-covergo/Scheduler
           - chinh-trieu-covergo/Scripts-js
-          - chinh-trieu-covergo/Achievements
           - chinh-trieu-covergo/api-gateway
           - chinh-trieu-covergo/Auth
           - chinh-trieu-covergo/Cases
-          - chinh-trieu-covergo/ClaimInvestigation
           - chinh-trieu-covergo/Claims
           - chinh-trieu-covergo/ChannelManagement
-          - chinh-trieu-covergo/Claims3
+          - chinh-trieu-covergo/etl
     steps:
       - name: Validate branch name
         env:
@@ -225,17 +220,16 @@ jobs:
           BRANCH_NAME: ${{ inputs.branch_name }}
           REPOSITORY: ${{ matrix.repository }}
         if: 
-          matrix.repository == 'chinh-trieu-covergo/RequestManager' ||          
-          matrix.repository == 'chinh-trieu-covergo/Claims3' ||
-          matrix.repository == 'chinh-trieu-covergo/ProductBuilder' ||
-          matrix.repository == 'chinh-trieu-covergo/Templates'
+          matrix.repository == 'chinh-trieu-covergo/RequestManager'
+          
         run: |
           git checkout "$BRANCH_NAME"
           git pull origin "$BRANCH_NAME"
           BUILD_PUBLISH_FILE_PATH=".github/workflows/build-publish.yml"
-
           BUILD_PUBLISH_REQUEST_MANAGER_FILE_PATH=".github/workflows/build-and-publish-request-manager-gamma.yml"
-
+          echo "Files in current directory:"
+          ls -la
+          
           # Copy all content from BUILD_PUBLISH_REQUEST_MANAGER_FILE_PATH to BUILD_PUBLISH_FILE_PATH
           cp "$BUILD_PUBLISH_REQUEST_MANAGER_FILE_PATH" "$BUILD_PUBLISH_FILE_PATH"
           
