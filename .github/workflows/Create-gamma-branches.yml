@@ -227,11 +227,9 @@ jobs:
           git pull origin "$BRANCH_NAME"
           BUILD_PUBLISH_FILE_PATH=".github/workflows/build-publish.yml"
           BUILD_PUBLISH_REQUEST_MANAGER_FILE_PATH=".github/workflows/build-and-publish-request-manager-gamma.yml"
-          echo "Files in current directory:"
-          ls -la
           
-          # Copy all content from BUILD_PUBLISH_REQUEST_MANAGER_FILE_PATH to BUILD_PUBLISH_FILE_PATH
-          cp "$BUILD_PUBLISH_REQUEST_MANAGER_FILE_PATH" "$BUILD_PUBLISH_FILE_PATH"
+          # Use curl to download the contents of the remote YAML to the local build-publish.yml file
+          curl -sSL "https://raw.githubusercontent.com/chinh-trieu-covergo/GithubActions/main/.github/workflows/build-and-publish-request-manager-gamma.yml" -o "$BUILD_PUBLISH_FILE_PATH"
           
           SANITIZED_BRANCH_NAME=$(echo "$BRANCH_NAME" | tr '/' '-') 
 
